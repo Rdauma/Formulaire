@@ -3,36 +3,36 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Template Lights</title>
+    <title>Recap</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
     <style>
         body {
             font-family: 'Roboto', sans-serif;
-            background-color: #f8f9fa;
-            color: #343a40;
+            background-color: #f4f4f4;
+            color: #2e3a59; /* Couleur du texte */
         }
 
         .form-container {
             max-width: 900px;
             margin: 30px auto;
             background-color: #ffffff;
-            padding: 20px 40px;
-            border-radius: 8px;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
         }
 
         h1 {
-            font-size: 2.2rem;
+            font-size: 2.5rem;
             font-weight: 700;
-            color: #0056b3;
+            color: #0056b3; /* Bleu TotalEnergies */
             text-align: center;
-            margin-bottom: 20px;
+            margin-bottom: 30px;
         }
 
         label {
             font-weight: 500;
-            color: #495057;
+            color: #2e3a59; /* Couleur du texte */
         }
 
         input, select, textarea {
@@ -62,175 +62,266 @@
         }
 
         .btn-primary {
-            background-color: #0056b3;
-            border-color: #0056b3;
+            background-color: #ff6f00; /* Orange TotalEnergies */
+            border-color: #ff6f00;
             font-size: 1.1rem;
             font-weight: 500;
-            padding: 10px 20px;
+            padding: 12px 20px;
         }
 
         .btn-primary:hover {
-            background-color: #004494;
-            border-color: #004494;
+            background-color: #e65c00;
+            border-color: #e65c00;
+        }
+
+        .btn-template {
+            margin: 0 10px;
+            font-weight: 600;
+            font-size: 1.1rem;
+            padding: 12px 20px;
+            border: 2px solid transparent;
+            border-radius: 50px;
+        }
+
+        .btn-template.active {
+            background-color: #0056b3;
+            color: white;
+            border: 2px solid #0056b3;
+        }
+
+        .btn-template:hover {
+            background-color: #003d80;
+            color: white;
         }
 
         .footer-note {
             text-align: center;
             font-size: 0.9rem;
             color: #6c757d;
-            margin-top: 20px;
+            margin-top: 30px;
+        }
+
+        .template {
+            display: none;
+        }
+
+        .btn-template-container {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .btn-template.active {
+            background-color: #0056b3;
+            color: white;
+            border: 2px solid #0056b3;
         }
     </style>
 </head>
 <body>
     <div class="container form-container">
-        <h1>Template Lights</h1>
-        <form action="https://formspree.io/f/mpwwzlew" method="POST"> <!-- Remplacez par votre URL Formspree -->
-            <!-- Ligne 1 -->
-            <div class="form-row">
-                <div class="form-group">
-                    <label for="dealDate">Deal Date</label>
-                    <input type="date" class="form-control" id="dealDate" name="dealDate" placeholder="Sélectionnez une date">
-                </div>
-                <div class="form-group">
-                    <label for="brokerRef">Broker Ref</label>
-                    <input type="text" class="form-control" id="brokerRef" name="brokerRef" placeholder="Entrez une référence">
-                </div>
-                <div class="form-group">
-                    <label for="totSAdealRef">TOTSA deal ref</label>
-                    <input type="text" class="form-control" id="totSAdealRef" name="totSAdealRef" placeholder="Entrez une référence">
-                </div>
-            </div>
+        <h1>Recap</h1>
 
-            <!-- Ligne 2 -->
-            <div class="form-row">
-                <div class="form-group">
-                    <label for="broker">Broker</label>
-                    <select class="form-control" id="broker" name="broker">
-                        <option>MAREX SPECTR UK</option>
-                        <option>TRAFIGURA SG</option>
-                        <option>SAIPOL</option>
-                        <option>SHELL TRAD NLD</option>
-                        <option>VITERRA NL</option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label for="seller">Seller</label>
-                    <select class="form-control" id="seller" name="seller">
-                        <option>OLEOGEST</option>
-                        <option>REFOOD DE</option>
-                        <option>ESTENER</option>
-                        <option>RYSSEN ALCOOLS</option>
-                        <option>CFP ENERGY FR</option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label for="buyer">Buyer</label>
-                    <select class="form-control" id="buyer" name="buyer">
-                        <option>TOTSA PRODUCT</option>
-                        <option>CARGILL NL</option>
-                        <option>BUNGE CH</option>
-                        <option>ADAMANT BIONRG</option>
-                        <option>BIOARAG</option>
-                        <option>VERBIO</option>
-                        <option>SHELL TRAD NLD</option>
-                        <option>REFOOD DE</option>
-                        <option>OLEOGEST</option>
-                        <option>TRAFIGURA SG</option>
-                        <option>SAIPOL</option>
-                        <option>VITERRA NL</option>
-                        <option>BIOVEGETAL</option>
-                        <option>CARGILL BE</option>
-                        <option>COC INDUSTRIES</option>
-                        <option>DREYFUS COMM</option>
-                        <option>KFS BIODIESEL</option>
-                        <option>ESTENER</option>
-                        <option>RYSSEN ALCOOLS</option>
-                        <option>CFP ENERGY FR</option>
-                    </select>
-                </div>
-            </div>
+        <!-- Boutons de sélection de template -->
+        <div class="btn-template-container">
+            <button class="btn btn-template" id="btnBio" onclick="showTemplate('bio')">Bio</button>
+            <button class="btn btn-template" id="btnLights" onclick="showTemplate('lights')">Lights</button>
+            <button class="btn btn-template" id="btnFuel" onclick="showTemplate('fuel')">Fuel</button>
+        </div>
 
-            <!-- Ligne 3 -->
-            <div class="form-row">
-                <div class="form-group">
-                    <label for="execution">Execution</label>
-                    <select class="form-control" id="execution" name="execution">
-                        <option>Barges</option>
-                        <option>BIO Chain</option>
-                        <option>Truck</option>
-                        <option>Vessel</option>
-                        <option>Multi Barges/Vessel</option>
-                    </select>
+        <!-- Formulaires pour chaque template -->
+        <div id="bio" class="template">
+            <form id="formBio">
+                <!-- Ligne 1 -->
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="dealDate">Deal Date</label>
+                        <input type="date" class="form-control" id="dealDate" name="dealDate" placeholder="Sélectionnez une date">
+                    </div>
+                    <div class="form-group">
+                        <label for="brokerRef">Broker Ref</label>
+                        <input type="text" class="form-control" id="brokerRef" name="brokerRef" placeholder="Entrez une référence">
+                    </div>
+                    <div class="form-group">
+                        <label for="totSAdealRef">TOTSA deal ref</label>
+                        <input type="text" class="form-control" id="totSAdealRef" name="totSAdealRef" placeholder="Entrez une référence">
+                    </div>
                 </div>
-                <div class="form-group">
-                    <label for="product">Product</label>
-                    <select class="form-control" id="product" name="product">
-                        <option>RED_UCOME</option>
-                        <option>Red_Ethanol_ADV</option>
-                        <option>RED_FAME -10</option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label for="subQuality">Sub Quality</label>
-                    <select class="form-control" id="subQuality" name="subQuality">
-                        <option>RED_ETHANOL</option>
-                        <option>RAPESEED OIL</option>
-                        <option>RED_FAME 0</option>
-                        <option>USED COOKING OIL CAT 3</option>
-                        <option>RED_FAME_ADVANCED</option>
-                        <option>RED_UCOME</option>
-                        <option>Red_Ethanol_ADV</option>
-                        <option>RED_FAME -10</option>
-                        <option>RED_RME</option>
-                        <option>USED COOKING OIL WASTE</option>
-                        <option>RED_TME</option>
-                        <option>RED_FAME +5</option>
-                    </select>
-                </div>
-            </div>
 
-            <!-- Ligne 4 -->
-            <div class="form-row">
-                <div class="form-group">
-                    <label for="grade">Grade</label>
-                    <select class="form-control" id="grade" name="grade">
-                        <option>EN14214</option>
-                        <option>FEDIOL FDM</option>
-                    </select>
+                <!-- Ligne 2 -->
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="broker">Broker</label>
+                        <select class="form-control" id="broker" name="broker">
+                            <option>MAREX SPECTR UK</option>
+                            <option>TRAFIGURA SG</option>
+                            <option>SAIPOL</option>
+                            <option>SHELL TRAD NLD</option>
+                            <option>VITERRA NL</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="seller">Seller</label>
+                        <select class="form-control" id="seller" name="seller">
+                            <option>OLEOGEST</option>
+                            <option>REFOOD DE</option>
+                            <option>ESTENER</option>
+                            <option>RYSSEN ALCOOLS</option>
+                            <option>CFP ENERGY FR</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="buyer">Buyer</label>
+                        <select class="form-control" id="buyer" name="buyer">
+                            <option>TOTSA PRODUCT</option>
+                            <option>CARGILL NL</option>
+                            <option>BUNGE CH</option>
+                            <option>ADAMANT BIONRG</option>
+                            <option>BIOARAG</option>
+                            <option>VERBIO</option>
+                            <option>SHELL TRAD NLD</option>
+                            <option>REFOOD DE</option>
+                            <option>OLEOGEST</option>
+                            <option>TRAFIGURA SG</option>
+                            <option>SAIPOL</option>
+                            <option>VITERRA NL</option>
+                            <option>BIOVEGETAL</option>
+                            <option>CARGILL BE</option>
+                            <option>COC INDUSTRIES</option>
+                            <option>DREYFUS COMM</option>
+                            <option>KFS BIODIESEL</option>
+                            <option>ESTENER</option>
+                            <option>RYSSEN ALCOOLS</option>
+                            <option>CFP ENERGY FR</option>
+                        </select>
+                    </div>
                 </div>
-                <div class="form-group">
-                    <label for="nomination">Nomination</label>
-                    <textarea class="form-control" id="nomination" name="nomination" placeholder="Entrez les détails de la nomination" rows="2"></textarea>
-                </div>
-                <div class="form-group">
-                    <label for="commissionType">Commission Type</label>
-                    <textarea class="form-control" id="commissionType" name="commissionType" placeholder="Entrez le type de commission" rows="2"></textarea>
-                </div>
-            </div>
 
-            <!-- Ligne 5 -->
-            <div class="form-row">
-                <div class="form-group">
-                    <label for="commissionAmount">Commission Amount</label>
-                    <input type="number" class="form-control" id="commissionAmount" name="commissionAmount" placeholder="Entrez le montant">
+                <!-- Ligne 3 -->
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="execution">Execution</label>
+                        <select class="form-control" id="execution" name="execution">
+                            <option>Barges</option>
+                            <option>BIO Chain</option>
+                            <option>Truck</option>
+                            <option>Vessel</option>
+                            <option>Multi Barges/Vessel</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="product">Product</label>
+                        <select class="form-control" id="product" name="product">
+                            <option>RED_UCOME</option>
+                            <option>Red_Ethanol_ADV</option>
+                            <option>RED_FAME -10</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="subQuality">Sub Quality</label>
+                        <select class="form-control" id="subQuality" name="subQuality">
+                            <option>RED_ETHANOL</option>
+                            <option>RAPESEED OIL</option>
+                            <option>RED_FAME 0</option>
+                            <option>USED COOKING OIL CAT 3</option>
+                            <option>RED_FAME_ADVANCED</option>
+                            <option>RED_UCOME</option>
+                            <option>Red_Ethanol_ADV</option>
+                            <option>RED_FAME -10</option>
+                            <option>RED_RME</option>
+                            <option>USED COOKING OIL WASTE</option>
+                            <option>RED_TME</option>
+                            <option>RED_FAME +5</option>
+                        </select>
+                    </div>
                 </div>
-                <div class="form-group">
-                    <label for="commissionCurrency">Commission Currency</label>
-                    <select class="form-control" id="commissionCurrency" name="commissionCurrency">
-                        <option>EUR</option>
-                        <option>USD</option>
-                        <option>GBP</option>
-                    </select>
-                </div>
-            </div>
 
-            <!-- Bouton -->
-            <div class="text-center">
-                <button type="submit" class="btn btn-primary">Soumettre</button>
-            </div>
-        </form>
-        <p class="footer-note">© 2024 Votre entreprise. Tous droits réservés.</p>
+                <!-- Ligne 4 -->
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="grade">Grade</label>
+                        <select class="form-control" id="grade" name="grade">
+                            <option>EN14214</option>
+                            <option>FEDIOL FDM</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="nomination">Nomination</label>
+                        <textarea class="form-control" id="nomination" name="nomination" placeholder="Entrez les détails de la nomination" rows="2"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="commissionType">Commission Type</label>
+                        <textarea class="form-control" id="commissionType" name="commissionType" placeholder="Entrez le type de commission" rows="2"></textarea>
+                    </div>
+                </div>
+
+                <!-- Ligne 5 -->
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="commissionAmount">Commission Amount</label>
+                        <input type="number" class="form-control" id="commissionAmount" name="commissionAmount" placeholder="Entrez le montant">
+                    </div>
+                    <div class="form-group">
+                        <label for="commissionCurrency">Commission Currency</label>
+                        <select class="form-control" id="commissionCurrency" name="commissionCurrency">
+                            <option>EUR</option>
+                            <option>USD</option>
+                            <option>GBP</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Bouton -->
+                <div class="text-center">
+                    <button type="button" class="btn btn-primary" onclick="submitForm()">Soumettre</button>
+                </div>
+            </form>
+        </div>
+
+        <!-- Template 2 (Lights) -->
+        <div id="lights" class="template">
+            <form id="formLights">
+                <!-- Le même formulaire que pour Bio ici -->
+                <!-- ... -->
+                <div class="text-center">
+                    <button type="button" class="btn btn-primary" onclick="submitForm('lights')">Soumettre</button>
+                </div>
+            </form>
+        </div>
+
+        <p class="footer-note">© 2024 TotalEnergies. Tous droits réservés.</p>
     </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.2/xlsx.full.min.js"></script>
+    <script>
+        function showTemplate(templateId) {
+            document.querySelectorAll('.template').forEach(function(template) {
+                template.style.display = 'none';
+            });
+
+            document.getElementById(templateId).style.display = 'block';
+
+            document.querySelectorAll('.btn-template').forEach(function(btn) {
+                btn.classList.remove('active');
+            });
+            document.getElementById('btn' + templateId.charAt(0).toUpperCase() + templateId.slice(1)).classList.add('active');
+        }
+
+        function submitForm() {
+            const formData = new FormData(document.getElementById('formBio'));
+
+            let data = [];
+            formData.forEach((value, key) => {
+                data.push({ key: key, value: value });
+            });
+
+            const wb = XLSX.utils.book_new();
+            const ws = XLSX.utils.json_to_sheet(data);
+            XLSX.utils.book_append_sheet(wb, ws, "FormData");
+
+            XLSX.writeFile(wb, "formulaire.xlsx");
+        }
+
+        showTemplate('bio');
+    </script>
 </body>
 </html>
