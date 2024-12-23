@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vérification des Cadeaux</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f8f9fa;
+        }
+        .container {
+            max-width: 600px;
+            margin: 20px auto;
+            padding: 20px;
+            background: #fff;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+        .section-title {
+            margin-top: 20px;
+            font-size: 1.2em;
+            font-weight: bold;
+        }
+        .gift-item {
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            padding: 10px 0;
+            border-bottom: 1px solid #ddd;
+        }
+        .gift-item:last-child {
+            border-bottom: none;
+        }
+        .gift-info {
+            flex: 1;
+            margin-left: 10px;
+        }
+        .gift-title {
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+        .gift-desc {
+            font-size: 14px;
+            color: #666;
+        }
+        input[type="checkbox"] {
+            width: 20px;
+            height: 20px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Vérification des Cadeaux</h1>
+
+        <div class="section-title">À faire</div>
+        <div id="to-do">
+            <!-- Liste des cadeaux à faire -->
+            <div class="gift-item">
+                <input type="checkbox" id="Nicolas" onchange="moveItem(this)">
+                <div class="gift-info">
+                    <label for="Nicolas" class="gift-title">Nicolas</label>
+                    <p class="gift-desc">valise à roulettes environ 60 l</p>
+                </div>
+            </div>
+        
+            <div class="gift-item">
+                <input type="checkbox" id="Aliénor" onchange="moveItem(this)">
+                <div class="gift-info">
+                    <label for="Aliénor" class="gift-title">Aliénor</label>
+                    <p class="gift-desc">BD Ana et l'Entremonde - Tome 02</p>
+                </div>
+            </div>
+        
+            <div class="gift-item">
+                <input type="checkbox" id="Aloïs" onchange="moveItem(this)">
+                <div class="gift-info">
+                    <label for="Aloïs" class="gift-title">Aloïs</label>
+                    <p class="gift-desc">petit manuel de potions pour sorciers débutants de Jean Espérance</p>
+                </div>
+            </div>
+        
+            <div class="gift-item">
+                <input type="checkbox" id="Victor" onchange="moveItem(this)">
+                <div class="gift-info">
+                    <label for="Victor" class="gift-title">Victor</label>
+                    <p class="gift-desc">4 petites voitures Hot Wheels</p>
+                </div>
+            </div>
+        
+            <div class="gift-item">
+                <input type="checkbox" id="Astrid" onchange="moveItem(this)">
+                <div class="gift-info">
+                    <label for="Astrid" class="gift-title">Astrid</label>
+                    <p class="gift-desc">1 combinaison ou salopette longue en 18 mois pour cet hiver + jeu</p>
+                </div>
+            </div>
+        
+            <div class="gift-item">
+                <input type="checkbox" id="Cathy" onchange="moveItem(this)">
+                <div class="gift-info">
+                    <label for="Cathy" class="gift-title">Cathy</label>
+                    <p class="gift-desc">un fond de teint Guerlain</p>
+                </div>
+            </div>
+        
+            <div class="gift-item">
+                <input type="checkbox" id="Xavier" onchange="moveItem(this)">
+                <div class="gift-info">
+                    <label for="Xavier" class="gift-title">Xavier</label>
+                    <p class="gift-desc">Arbre fruitier</p>
+                </div>
+            </div>
+        
+            <div class="gift-item">
+                <input type="checkbox" id="Xavier anniversaire" onchange="moveItem(this)">
+                <div class="gift-info">
+                    <label for="Xavier anniversaire" class="gift-title">Xavier anniversaire</label>
+                    <p class="gift-desc">Polos manche longue</p>
+                </div>
+            </div>
+        
+            <div class="gift-item">
+                <input type="checkbox" id="Guillaume" onchange="moveItem(this)">
+                <div class="gift-info">
+                    <label for="Guillaume" class="gift-title">Guillaume</label>
+                    <p class="gift-desc">Oreiller + taie</p>
+                </div>
+            </div>
+        
+            <div class="gift-item">
+                <input type="checkbox" id="Coline (Marine)" onchange="moveItem(this)">
+                <div class="gift-info">
+                    <label for="Coline (Marine)" class="gift-title">Coline (Marine)</label>
+                    <p class="gift-desc">Appareil Kodac</p>
+                </div>
+            </div>
+        
+            <div class="gift-item">
+                <input type="checkbox" id="Sylvie  (Marine)" onchange="moveItem(this)">
+                <div class="gift-info">
+                    <label for="Sylvie  (Marine)" class="gift-title">Sylvie  (Marine)</label>
+                    <p class="gift-desc">Rideau</p>
+                </div>
+            </div>
+        
+            <div class="gift-item">
+                <input type="checkbox" id="Julien (Renan)" onchange="moveItem(this)">
+                <div class="gift-info">
+                    <label for="Julien (Renan)" class="gift-title">Julien (Renan)</label>
+                    <p class="gift-desc">?</p>
+                </div>
+            </div>
+        
+            <div class="gift-item">
+                <input type="checkbox" id="Alain (Renan)" onchange="moveItem(this)">
+                <div class="gift-info">
+                    <label for="Alain (Renan)" class="gift-title">Alain (Renan)</label>
+                    <p class="gift-desc">2 sous-casque + mitaine + chaussette</p>
+                </div>
+            </div>
+        
+            <div class="gift-item">
+                <input type="checkbox" id="Maï" onchange="moveItem(this)">
+                <div class="gift-info">
+                    <label for="Maï" class="gift-title">Maï</label>
+                    <p class="gift-desc">Chauffe-pied</p>
+                </div>
+            </div>
+        
+            <div class="gift-item">
+                <input type="checkbox" id="Laetita (anniv et noël)" onchange="moveItem(this)">
+                <div class="gift-info">
+                    <label for="Laetita (anniv et noël)" class="gift-title">Laetita (anniv et noël)</label>
+                    <p class="gift-desc">Sac Cabaia + chaussette</p>
+                </div>
+            </div>
+        
+            <div class="gift-item">
+                <input type="checkbox" id="Romain" onchange="moveItem(this)">
+                <div class="gift-info">
+                    <label for="Romain" class="gift-title">Romain</label>
+                    <p class="gift-desc">Grenier Savoyard</p>
+                </div>
+            </div>
+        
+            <div class="gift-item">
+                <input type="checkbox" id="Lucie" onchange="moveItem(this)">
+                <div class="gift-info">
+                    <label for="Lucie" class="gift-title">Lucie</label>
+                    <p class="gift-desc">Baguette HP</p>
+                </div>
+            </div>
+        
+            <div class="gift-item">
+                <input type="checkbox" id="Kate Lynn" onchange="moveItem(this)">
+                <div class="gift-info">
+                    <label for="Kate Lynn" class="gift-title">Kate Lynn</label>
+                    <p class="gift-desc">Arène Pokémon</p>
+                </div>
+            </div>
+        
+            <div class="gift-item">
+                <input type="checkbox" id="Thierry et Magalie (Marine)" onchange="moveItem(this)">
+                <div class="gift-info">
+                    <label for="Thierry et Magalie (Marine)" class="gift-title">Thierry et Magalie (Marine)</label>
+                    <p class="gift-desc">Grenier Savoyard</p>
+                </div>
+            </div>
+        
+            <div class="gift-item">
+                <input type="checkbox" id="Thierry et Magalie (Renan)" onchange="moveItem(this)">
+                <div class="gift-info">
+                    <label for="Thierry et Magalie (Renan)" class="gift-title">Thierry et Magalie (Renan)</label>
+                    <p class="gift-desc">Sapinette</p>
+                </div>
+            </div>
+        
+            <div class="gift-item">
+                <input type="checkbox" id="Morgane" onchange="moveItem(this)">
+                <div class="gift-info">
+                    <label for="Morgane" class="gift-title">Morgane</label>
+                    <p class="gift-desc">Carte cadeau</p>
+                </div>
+            </div>
+        
+            <div class="gift-item">
+                <input type="checkbox" id="Marine" onchange="moveItem(this)">
+                <div class="gift-info">
+                    <label for="Marine" class="gift-title">Marine</label>
+                    <p class="gift-desc">?</p>
+                </div>
+            </div>
+        
+            <div class="gift-item">
+                <input type="checkbox" id="Renan" onchange="moveItem(this)">
+                <div class="gift-info">
+                    <label for="Renan" class="gift-title">Renan</label>
+                    <p class="gift-desc">?</p>
+                </div>
+            </div>
+        
+            <div class="gift-item">
+                <input type="checkbox" id="Maël" onchange="moveItem(this)">
+                <div class="gift-info">
+                    <label for="Maël" class="gift-title">Maël</label>
+                    <p class="gift-desc">Kidizoom</p>
+                </div>
+            </div>
+        
+            <div class="gift-item">
+                <input type="checkbox" id="Alix" onchange="moveItem(this)">
+                <div class="gift-info">
+                    <label for="Alix" class="gift-title">Alix</label>
+                    <p class="gift-desc">Drezienne</p>
+                </div>
+            </div>
+        
+            <div class="gift-item">
+                <input type="checkbox" id="Jenny" onchange="moveItem(this)">
+                <div class="gift-info">
+                    <label for="Jenny" class="gift-title">Jenny</label>
+                    <p class="gift-desc">Coffret Sapinette</p>
+                </div>
+            </div>
+        
+            <div class="gift-item">
+                <input type="checkbox" id="Quentin" onchange="moveItem(this)">
+                <div class="gift-info">
+                    <label for="Quentin" class="gift-title">Quentin</label>
+                    <p class="gift-desc">Tome 8 Les Vieux Fourneaux</p>
+                </div>
+            </div>
+        
+            <div class="gift-item">
+                <input type="checkbox" id="Jerem (Marine)" onchange="moveItem(this)">
+                <div class="gift-info">
+                    <label for="Jerem (Marine)" class="gift-title">Jerem (Marine)</label>
+                    <p class="gift-desc">?</p>
+                </div>
+            </div>
+        
+            <div class="gift-item">
+                <input type="checkbox" id="Jerem (Renan)" onchange="moveItem(this)">
+                <div class="gift-info">
+                    <label for="Jerem (Renan)" class="gift-title">Jerem (Renan)</label>
+                    <p class="gift-desc">?</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="section-title">Done</div>
+        <div id="done">
+            <!-- Les éléments terminés seront déplacés ici -->
+        </div>
+
+    </div>
+
+    <script>
+        function moveItem(checkbox) {
+            const item = checkbox.closest('.gift-item');
+            const targetContainer = checkbox.checked ? document.getElementById('done') : document.getElementById('to-do');
+            targetContainer.appendChild(item);
+        }
+    </script>
+</body>
+</html>
