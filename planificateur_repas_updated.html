@@ -1,0 +1,153 @@
+
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Planificateur de repas</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 20px;
+      line-height: 1.6;
+    }
+    .container {
+      max-width: 600px;
+      margin: 0 auto;
+    }
+    button {
+      margin: 10px 0;
+      padding: 10px 20px;
+      background-color: #4CAF50;
+      color: white;
+      border: none;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: #45a049;
+    }
+    ul {
+      list-style-type: none;
+      padding: 0;
+    }
+    li {
+      margin: 5px 0;
+    }
+    .todo-item {
+      display: flex;
+      align-items: center;
+    }
+    .todo-item input {
+      margin-right: 10px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Planificateur de repas équilibrés</h1>
+    <button id="generate-meals">Générer des repas</button>
+    <div id="meal-plans" style="display: none;">
+      <h2>Repas proposés :</h2>
+      <ul id="meals-list"></ul>
+      <button id="validate-meals">Valider les repas</button>
+      <button id="regenerate-meals">Proposer d'autres repas</button>
+    </div>
+    <div id="shopping-list" style="display: none;">
+      <h2>Liste de courses :</h2>
+      <ul id="shopping-items"></ul>
+      <button id="validate-shopping">Valider la liste de courses</button>
+    </div>
+    <div id="todo-list" style="display: none;">
+      <h2>To-Do List de courses :</h2>
+      <ul id="todo-items"></ul>
+    </div>
+  </div>
+
+  <script>
+    const meals = [
+      { name: "Poulet rôti avec légumes grillés", ingredients: ["Poulet", "Carottes", "Courgettes", "Huile d'olive", "Herbes de Provence"] },
+      { name: "Saumon au four avec riz et épinards", ingredients: ["Saumon", "Riz", "Épinards", "Citron", "Ail"] },
+      { name: "Quinoa aux légumes et pois chiches", ingredients: ["Quinoa", "Courgettes", "Poivrons", "Pois chiches", "Coriandre"] },
+      { name: "Spaghetti aux boulettes de viande et sauce tomate", ingredients: ["Spaghetti", "Viande hachée", "Tomates", "Ail", "Oignon"] },
+      { name: "Omelette aux champignons et salade verte", ingredients: ["Œufs", "Champignons", "Salade", "Tomates cerises", "Vinaigrette"] },
+      { name: "Filet de dinde avec patates douces et haricots verts", ingredients: ["Filet de dinde", "Patates douces", "Haricots verts", "Beurre", "Persil"] },
+      { name: "Poêlée de crevettes avec nouilles sautées et légumes", ingredients: ["Crevettes", "Nouilles", "Brocoli", "Carottes", "Sauce soja"] },
+      { name: "Curry de lentilles et riz basmati", ingredients: ["Lentilles", "Riz basmati", "Lait de coco", "Épices", "Épinards"] },
+      { name: "Tajine de poulet aux abricots et amandes", ingredients: ["Poulet", "Abricots secs", "Amandes", "Semoule", "Épices"] },
+      { name: "Lasagnes aux légumes", ingredients: ["Pâtes à lasagnes", "Courgettes", "Tomates", "Fromage", "Béchamel"] }
+    ];
+
+    function generateMeals() {
+      const selectedMeals = [];
+      while (selectedMeals.length < 5) {
+        const randomMeal = meals[Math.floor(Math.random() * meals.length)];
+        if (!selectedMeals.includes(randomMeal)) {
+          selectedMeals.push(randomMeal);
+        }
+      }
+      return selectedMeals;
+    }
+
+    function displayMeals(meals) {
+      const mealsList = document.getElementById("meals-list");
+      mealsList.innerHTML = "";
+      meals.forEach(meal => {
+        const li = document.createElement("li");
+        li.textContent = meal.name;
+        mealsList.appendChild(li);
+      });
+    }
+
+    function displayShoppingList(ingredients) {
+      const shoppingItems = document.getElementById("shopping-items");
+      shoppingItems.innerHTML = "";
+      ingredients.forEach(item => {
+        const li = document.createElement("li");
+        li.textContent = item;
+        shoppingItems.appendChild(li);
+      });
+    }
+
+    function displayTodoList(ingredients) {
+      const todoItems = document.getElementById("todo-items");
+      todoItems.innerHTML = "";
+      ingredients.forEach(item => {
+        const li = document.createElement("li");
+        li.className = "todo-item";
+        const checkbox = document.createElement("input");
+        checkbox.type = "checkbox";
+        li.appendChild(checkbox);
+        li.appendChild(document.createTextNode(item));
+        todoItems.appendChild(li);
+      });
+    }
+
+    let currentMeals = [];
+
+    document.getElementById("generate-meals").addEventListener("click", () => {
+      currentMeals = generateMeals();
+      displayMeals(currentMeals);
+      document.getElementById("meal-plans").style.display = "block";
+    });
+
+    document.getElementById("validate-meals").addEventListener("click", () => {
+      const ingredients = currentMeals.flatMap(meal => meal.ingredients);
+      displayShoppingList([...new Set(ingredients)]);
+      document.getElementById("shopping-list").style.display = "block";
+    });
+
+    document.getElementById("regenerate-meals").addEventListener("click", () => {
+      currentMeals = generateMeals();
+      displayMeals(currentMeals);
+      document.getElementById("shopping-list").style.display = "none";
+      document.getElementById("todo-list").style.display = "none";
+    });
+
+    document.getElementById("validate-shopping").addEventListener("click", () => {
+      const ingredients = currentMeals.flatMap(meal => meal.ingredients);
+      displayTodoList([...new Set(ingredients)]);
+      document.getElementById("todo-list").style.display = "block";
+    });
+  </script>
+</body>
+</html>
