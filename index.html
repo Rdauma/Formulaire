@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Plats Équilibrés</title>
+    <title>Planificateur de Plats</title>
     <style>
         * {
             margin: 0;
@@ -12,29 +12,28 @@
         }
         body {
             font-family: 'Arial', sans-serif;
-            line-height: 1.6;
-            margin: 20px;
-            background-color: #f9f9f9;
+            background-color: #f4f4f9;
             color: #333;
+            padding: 20px;
         }
         header {
+            text-align: center;
             background-color: #4CAF50;
             color: white;
-            padding: 10px 20px;
-            text-align: center;
+            padding: 15px;
             border-radius: 8px;
             margin-bottom: 20px;
         }
         nav {
             display: flex;
             justify-content: center;
-            gap: 20px;
+            gap: 15px;
             margin-bottom: 20px;
         }
         nav button {
-            padding: 10px 20px;
             background-color: #4CAF50;
             color: white;
+            padding: 10px 15px;
             border: none;
             border-radius: 5px;
             cursor: pointer;
@@ -43,191 +42,182 @@
         nav button:hover {
             background-color: #45a049;
         }
-        .hidden {
-            display: none;
-        }
         section {
-            padding: 20px;
             background: white;
+            padding: 20px;
             border-radius: 8px;
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
             margin-bottom: 20px;
         }
         h2 {
-            margin-bottom: 10px;
+            margin-bottom: 15px;
         }
         ul {
-            list-style: none;
+            list-style-type: none;
             padding: 0;
         }
         ul li {
-            margin: 5px 0;
+            background: #f9f9f9;
             padding: 10px;
+            margin-bottom: 10px;
             border: 1px solid #ddd;
             border-radius: 5px;
-            background-color: #f9f9f9;
         }
-        ul li input[type="checkbox"] {
-            margin-right: 10px;
+        button {
+            padding: 10px 15px;
+            margin-top: 10px;
         }
-        input, select {
+        input[type="date"] {
             padding: 10px;
             margin: 10px 0;
-            width: 100%;
-            max-width: 400px;
             border: 1px solid #ddd;
             border-radius: 5px;
+            width: 100%;
+            max-width: 300px;
         }
-        .btn-save {
-            background-color: #007BFF;
-            color: white;
-            border: none;
-        }
-        .btn-save:hover {
-            background-color: #0056b3;
+        .hidden {
+            display: none;
         }
     </style>
 </head>
 <body>
-    <header>
-        <h1>Plats Équilibrés</h1>
-    </header>
 
-    <nav>
-        <button onclick="showSection('meal-proposals')">Propositions</button>
-        <button onclick="showSection('week')">Semaine</button>
-    </nav>
+<header>
+    <h1>Planificateur de Plats Équilibrés</h1>
+</header>
 
-    <!-- Section: Propositions -->
-    <section id="meal-proposals">
-        <h2>Propositions de plats</h2>
-        <ul id="meals-list"></ul>
-        <button onclick="generateMeals()">Générer 7 autres plats</button>
-        <button onclick="validateMeals()">Valider ces plats</button>
+<nav>
+    <button onclick="showSection('meal-proposals')">Propositions</button>
+    <button onclick="showSection('week')">Semaine</button>
+</nav>
 
-        <div id="save-meals" class="hidden">
-            <h3>Sauvegarder mes plats</h3>
-            <label for="period">Choisir une période :</label>
-            <input type="date" id="period-start" placeholder="Date de début">
-            <input type="date" id="period-end" placeholder="Date de fin">
-            <button class="btn-save" onclick="saveMeals()">Sauvegarder</button>
-        </div>
-    </section>
+<!-- Propositions de plats -->
+<section id="meal-proposals">
+    <h2>Propositions de plats</h2>
+    <ul id="meals-list"></ul>
+    <button onclick="generateMeals()">Générer 7 autres plats</button>
+    <button onclick="validateMeals()">Valider ces plats</button>
+</section>
 
-    <!-- Section: Liste des courses -->
-    <section id="shopping-list" class="hidden">
-        <h2>Liste des courses</h2>
-        <ul id="shopping-items"></ul>
-    </section>
+<!-- Liste des courses -->
+<section id="shopping-list" class="hidden">
+    <h2>Liste des courses</h2>
+    <ul id="shopping-items"></ul>
+</section>
 
-    <!-- Section: Recettes -->
-    <section id="recipes" class="hidden">
-        <h2>Recettes</h2>
-        <div id="recipe-details"></div>
-    </section>
+<!-- Recettes -->
+<section id="recipes" class="hidden">
+    <h2>Recettes associées</h2>
+    <div id="recipe-details"></div>
+    <label for="period-start">Sauvegarder pour une période :</label>
+    <input type="date" id="period-start">
+    <input type="date" id="period-end">
+    <button onclick="saveMeals()">Sauvegarder</button>
+</section>
 
-    <!-- Section: Semaine -->
-    <section id="week" class="hidden">
-        <h2>Mes plats sauvegardés</h2>
-        <ul id="saved-meals"></ul>
-    </section>
+<!-- Plats sauvegardés -->
+<section id="week" class="hidden">
+    <h2>Mes plats sauvegardés</h2>
+    <ul id="saved-meals"></ul>
+</section>
 
-    <script>
-        const recipes = [
-            { name: "Poulet aux légumes", ingredients: { "Poulet": "500g", "Carottes": "4", "Courgettes": "2", "Ail": "2 gousses" }, recipe: "Faire revenir le poulet, ajouter les légumes coupés et cuire 20 min." },
-            { name: "Saumon au riz et brocolis", ingredients: { "Saumon": "4 filets", "Riz": "300g", "Brocolis": "1 tête" }, recipe: "Cuire le saumon au four, accompagner de riz et brocolis vapeur." },
-            // Ajoute d'autres recettes similaires...
-        ];
+<script>
+    const recipes = [
+        { name: "Poulet aux légumes", ingredients: { "Poulet": "500g", "Carottes": "4", "Courgettes": "2", "Ail": "2 gousses" }, recipe: "Faire revenir le poulet, ajouter les légumes et cuire 20 min." },
+        { name: "Saumon au riz", ingredients: { "Saumon": "4 filets", "Riz": "300g", "Brocolis": "1 tête" }, recipe: "Cuire le saumon et les brocolis à la vapeur." },
+        { name: "Salade de quinoa", ingredients: { "Quinoa": "200g", "Tomates": "3", "Avocat": "1", "Féta": "100g" }, recipe: "Mélanger le quinoa cuit avec les légumes et la fêta." },
+        { name: "Pâtes aux légumes", ingredients: { "Pâtes complètes": "300g", "Poivrons": "2", "Crème": "100ml" }, recipe: "Cuire les pâtes et ajouter les légumes sautés avec la crème." },
+        { name: "Chili sin carne", ingredients: { "Haricots rouges": "400g", "Tomates": "3", "Poivron": "1", "Épices chili": "1 c. à café" }, recipe: "Cuire les haricots rouges avec les légumes." },
+        // Ajoute d'autres recettes ici pour en avoir 20.
+    ];
 
-        let currentMeals = [];
-        const savedMeals = [];
+    let currentMeals = [];
+    const savedMeals = [];
 
-        function generateMeals() {
-            const mealsList = document.getElementById("meals-list");
-            mealsList.innerHTML = "";
+    function generateMeals() {
+        const mealsList = document.getElementById("meals-list");
+        mealsList.innerHTML = "";
 
-            const selectedRecipes = [];
-            while (selectedRecipes.length < 7) {
-                const randomRecipe = recipes[Math.floor(Math.random() * recipes.length)];
-                if (!selectedRecipes.includes(randomRecipe)) {
-                    selectedRecipes.push(randomRecipe);
+        const selectedRecipes = [];
+        while (selectedRecipes.length < 7) {
+            const randomRecipe = recipes[Math.floor(Math.random() * recipes.length)];
+            if (!selectedRecipes.includes(randomRecipe)) {
+                selectedRecipes.push(randomRecipe);
+            }
+        }
+
+        currentMeals = selectedRecipes;
+        selectedRecipes.forEach(recipe => {
+            const li = document.createElement("li");
+            li.textContent = recipe.name;
+            mealsList.appendChild(li);
+        });
+    }
+
+    function validateMeals() {
+        const shoppingList = document.getElementById("shopping-items");
+        shoppingList.innerHTML = "";
+
+        const shoppingItems = {};
+        currentMeals.forEach(meal => {
+            for (const [ingredient, quantity] of Object.entries(meal.ingredients)) {
+                if (shoppingItems[ingredient]) {
+                    shoppingItems[ingredient] += `, ${quantity}`;
+                } else {
+                    shoppingItems[ingredient] = quantity;
                 }
             }
+        });
 
-            currentMeals = selectedRecipes;
-            selectedRecipes.forEach(recipe => {
-                const li = document.createElement("li");
-                li.textContent = recipe.name;
-                mealsList.appendChild(li);
-            });
+        for (const [ingredient, quantity] of Object.entries(shoppingItems)) {
+            const li = document.createElement("li");
+            const checkbox = document.createElement("input");
+            checkbox.type = "checkbox";
+            li.appendChild(checkbox);
+            li.appendChild(document.createTextNode(` ${ingredient}: ${quantity}`));
+            shoppingList.appendChild(li);
         }
 
-        function validateMeals() {
-            document.getElementById("save-meals").classList.remove("hidden");
-            const shoppingList = document.getElementById("shopping-items");
-            shoppingList.innerHTML = "";
+        document.getElementById("shopping-list").classList.remove("hidden");
+        document.getElementById("recipes").classList.remove("hidden");
+        displayRecipes();
+    }
 
-            const shoppingItems = {};
-            currentMeals.forEach(meal => {
-                for (const [ingredient, quantity] of Object.entries(meal.ingredients)) {
-                    if (shoppingItems[ingredient]) {
-                        shoppingItems[ingredient] += `, ${quantity}`;
-                    } else {
-                        shoppingItems[ingredient] = quantity;
-                    }
-                }
-            });
+    function displayRecipes() {
+        const recipeDetails = document.getElementById("recipe-details");
+        recipeDetails.innerHTML = "";
 
-            for (const [ingredient, quantity] of Object.entries(shoppingItems)) {
-                const li = document.createElement("li");
-                const checkbox = document.createElement("input");
-                checkbox.type = "checkbox";
-                li.appendChild(checkbox);
-                li.appendChild(document.createTextNode(` ${ingredient}: ${quantity}`));
-                shoppingList.appendChild(li);
-            }
+        currentMeals.forEach(meal => {
+            const p = document.createElement("p");
+            p.innerHTML = `<strong>${meal.name}</strong>: ${meal.recipe}`;
+            recipeDetails.appendChild(p);
+        });
+    }
 
-            document.getElementById("shopping-list").classList.remove("hidden");
-            document.getElementById("recipes").classList.remove("hidden");
-            displayRecipes();
+    function saveMeals() {
+        const start = document.getElementById("period-start").value;
+        const end = document.getElementById("period-end").value;
+
+        if (start && end) {
+            savedMeals.push({ period: `${start} - ${end}`, meals: currentMeals });
+            const savedMealsList = document.getElementById("saved-meals");
+            savedMealsList.innerHTML = savedMeals.map(entry => `
+                <li><strong>Période :</strong> ${entry.period}<br><strong>Plats :</strong> ${entry.meals.map(m => m.name).join(", ")}</li>
+            `).join("");
+            alert("Plats sauvegardés !");
+        } else {
+            alert("Veuillez indiquer une période.");
         }
+    }
 
-        function displayRecipes() {
-            const recipeDetails = document.getElementById("recipe-details");
-            recipeDetails.innerHTML = "";
+    function showSection(sectionId) {
+        document.querySelectorAll("section").forEach(section => section.classList.add("hidden"));
+        document.getElementById(sectionId).classList.remove("hidden");
+    }
 
-            currentMeals.forEach(meal => {
-                const p = document.createElement("p");
-                p.innerHTML = `<strong>${meal.name}</strong>: ${meal.recipe}`;
-                recipeDetails.appendChild(p);
-            });
-        }
+    // Initialisation
+    generateMeals();
+</script>
 
-        function saveMeals() {
-            const start = document.getElementById("period-start").value;
-            const end = document.getElementById("period-end").value;
-
-            if (start && end) {
-                savedMeals.push({ period: `${start} - ${end}`, meals: currentMeals });
-                document.getElementById("saved-meals").innerHTML = savedMeals.map(entry => `
-                    <li>
-                        <strong>Période :</strong> ${entry.period}<br>
-                        <strong>Plats :</strong> ${entry.meals.map(meal => meal.name).join(", ")}
-                    </li>
-                `).join("");
-                alert("Plats sauvegardés avec succès !");
-            } else {
-                alert("Veuillez renseigner une période.");
-            }
-        }
-
-        function showSection(sectionId) {
-            document.querySelectorAll("section").forEach(section => section.classList.add("hidden"));
-            document.getElementById(sectionId).classList.remove("hidden");
-        }
-
-        // Initial generation
-        generateMeals();
-    </script>
 </body>
 </html>
