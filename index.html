@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Plats Équilibrés</title>
     <style>
-        /* Global styles */
         * {
             box-sizing: border-box;
             margin: 0;
@@ -129,16 +128,6 @@
             background-color: #3e8e41;
         }
 
-        /* Small button for changing meals */
-        .change-button {
-            font-size: 12px;
-            padding: 5px;
-            background-color: #f4f4f9;
-            border: 1px solid #4CAF50;
-            cursor: pointer;
-            border-radius: 8px;
-        }
-
         /* Mobile-responsive styles */
         @media (max-width: 600px) {
             h1 {
@@ -166,8 +155,13 @@
 
     <!-- Navigation Bar -->
     <div class="navbar">
+        <button onclick="toggleMenu()">Menu</button>
+    </div>
+
+    <!-- Menu -->
+    <div id="menu-options" class="hidden">
         <button onclick="showSavedMeals()">Plats Sauvegardés</button>
-        <button onclick="generateMeals()">Générer de nouveaux plats</button>
+        <button onclick="backToMeals()">Retour aux plats</button>
     </div>
 
     <!-- Propositions de plats -->
@@ -246,16 +240,22 @@
             }
 
             currentMeals = selectedRecipes;
-            selectedRecipes.forEach((recipe, index) => {
+            selectedRecipes.forEach((recipe) => {
                 const li = document.createElement("li");
                 li.textContent = recipe.name;
-                const changeButton = document.createElement("button");
-                changeButton.textContent = "Changer";
-                changeButton.classList.add("change-button");
-                changeButton.onclick = () => changeMeal(index);
-                li.appendChild(changeButton);
+                li.onclick = () => changeMeal(recipe);
                 mealsList.appendChild(li);
             });
+        }
+
+        // Fonction pour changer un plat généré aléatoirement
+        function changeMeal(recipe) {
+            const randomRecipe = recipes[Math.floor(Math.random() * recipes.length)];
+            const index = currentMeals.indexOf(recipe);
+            if (index !== -1) {
+                currentMeals[index] = randomRecipe;
+            }
+            generateMeals();
         }
 
         // Fonction pour valider les plats et demander la période
@@ -303,70 +303,54 @@
         function showRecipes() {
             const recipeDetails = document.getElementById("recipe-details");
             recipeDetails.innerHTML = "";
-
-            currentMeals.forEach(meal => {
+            currentMeals.forEach((meal) => {
                 const p = document.createElement("p");
-                p.innerHTML = `<strong>${meal.name}</strong>: ${meal.recipe}`;
+                p.textContent = `${meal.name}: ${meal.recipe}`;
                 recipeDetails.appendChild(p);
             });
-
             document.getElementById("action-selection").classList.add("hidden");
             document.getElementById("recipes").classList.remove("hidden");
         }
 
         // Fonction pour afficher la liste de courses
         function showShoppingList() {
-            const shoppingList = document.getElementById("shopping-items");
-            shoppingList.innerHTML = "";
-
-            const shoppingItems = {};
-            currentMeals.forEach(meal => {
-                for (const [ingredient, quantity] of Object.entries(meal.ingredients)) {
-                    if (shoppingItems[ingredient]) {
-                        shoppingItems[ingredient] += `, ${quantity}`;
-                    } else {
-                        shoppingItems[ingredient] = quantity;
-                    }
+            const shoppingItems = document.getElementById("shopping-items");
+            shoppingItems.innerHTML = "";
+            currentMeals.forEach((meal) => {
+                for (const ingredient in meal.ingredients) {
+                    const li = document.createElement("li");
+                    li.textContent = `${ingredient}: ${meal.ingredients[ingredient]}`;
+                    shoppingItems.appendChild(li);
                 }
             });
-
-            for (const [ingredient, quantity] of Object.entries(shoppingItems)) {
-                const li = document.createElement("li");
-                const checkbox = document.createElement("input");
-                checkbox.type = "checkbox";
-                li.appendChild(checkbox);
-                li.appendChild(document.createTextNode(` ${ingredient}: ${quantity} (4 personnes)`));
-                shoppingList.appendChild(li);
-            }
-
             document.getElementById("action-selection").classList.add("hidden");
             document.getElementById("shopping-list").classList.remove("hidden");
         }
 
-        // Fonction pour revenir aux plats sauvegardés
+        // Retour à l'écran des plats sauvegardés
         function backToSavedMeals() {
             document.getElementById("action-selection").classList.add("hidden");
             document.getElementById("saved-meals").classList.remove("hidden");
         }
 
-        // Fonction pour revenir à la génération des plats
+        // Retour à l'écran des plats
         function backToMeals() {
             document.getElementById("meal-proposals").classList.remove("hidden");
             document.getElementById("period-selection").classList.add("hidden");
-            document.getElementById("saved-meals").classList.add("hidden");
-            document.getElementById("shopping-list").classList.add("hidden");
-            document.getElementById("recipes").classList.add("hidden");
             document.getElementById("action-selection").classList.add("hidden");
-        }
-
-        // Fonction pour changer un plat généré
-        function changeMeal(index) {
-            const randomRecipe = recipes[Math.floor(Math.random() * recipes.length)];
-            currentMeals[index] = randomRecipe;
+            document.getElementById("saved-meals").classList.add("hidden");
+            document.getElementById("recipes").classList.add("hidden");
+            document.getElementById("shopping-list").classList.add("hidden");
             generateMeals();
         }
 
-        // Initial generation
+        // Toggle du menu
+        function toggleMenu() {
+            const menuOptions = document.getElementById("menu-options");
+            menuOptions.classList.toggle("hidden");
+        }
+
+        // Initialisation des plats
         generateMeals();
     </script>
 </body>
