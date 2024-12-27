@@ -1,153 +1,133 @@
-
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Planificateur de repas</title>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      margin: 20px;
-      line-height: 1.6;
-    }
-    .container {
-      max-width: 600px;
-      margin: 0 auto;
-    }
-    button {
-      margin: 10px 0;
-      padding: 10px 20px;
-      background-color: #4CAF50;
-      color: white;
-      border: none;
-      cursor: pointer;
-    }
-    button:hover {
-      background-color: #45a049;
-    }
-    ul {
-      list-style-type: none;
-      padding: 0;
-    }
-    li {
-      margin: 5px 0;
-    }
-    .todo-item {
-      display: flex;
-      align-items: center;
-    }
-    .todo-item input {
-      margin-right: 10px;
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Plats Équilibrés</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        button {
+            margin: 10px;
+            padding: 10px 15px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        .hidden {
+            display: none;
+        }
+        ul {
+            list-style-type: none;
+            padding: 0;
+        }
+    </style>
 </head>
 <body>
-  <div class="container">
-    <h1>Planificateur de repas équilibrés</h1>
-    <button id="generate-meals">Générer des repas</button>
-    <div id="meal-plans" style="display: none;">
-      <h2>Repas proposés :</h2>
-      <ul id="meals-list"></ul>
-      <button id="validate-meals">Valider les repas</button>
-      <button id="regenerate-meals">Proposer d'autres repas</button>
+    <h1>Plats Équilibrés</h1>
+    <div id="meal-proposals">
+        <h2>Propositions de plats</h2>
+        <ul id="meals-list"></ul>
+        <button onclick="generateMeals()">Générer 7 autres plats</button>
+        <button onclick="validateMeals()">Valider ces plats</button>
     </div>
-    <div id="shopping-list" style="display: none;">
-      <h2>Liste de courses :</h2>
-      <ul id="shopping-items"></ul>
-      <button id="validate-shopping">Valider la liste de courses</button>
-    </div>
-    <div id="todo-list" style="display: none;">
-      <h2>To-Do List de courses :</h2>
-      <ul id="todo-items"></ul>
-    </div>
-  </div>
 
-  <script>
-    const meals = [
-      { name: "Poulet rôti avec légumes grillés", ingredients: ["Poulet", "Carottes", "Courgettes", "Huile d'olive", "Herbes de Provence"] },
-      { name: "Saumon au four avec riz et épinards", ingredients: ["Saumon", "Riz", "Épinards", "Citron", "Ail"] },
-      { name: "Quinoa aux légumes et pois chiches", ingredients: ["Quinoa", "Courgettes", "Poivrons", "Pois chiches", "Coriandre"] },
-      { name: "Spaghetti aux boulettes de viande et sauce tomate", ingredients: ["Spaghetti", "Viande hachée", "Tomates", "Ail", "Oignon"] },
-      { name: "Omelette aux champignons et salade verte", ingredients: ["Œufs", "Champignons", "Salade", "Tomates cerises", "Vinaigrette"] },
-      { name: "Filet de dinde avec patates douces et haricots verts", ingredients: ["Filet de dinde", "Patates douces", "Haricots verts", "Beurre", "Persil"] },
-      { name: "Poêlée de crevettes avec nouilles sautées et légumes", ingredients: ["Crevettes", "Nouilles", "Brocoli", "Carottes", "Sauce soja"] },
-      { name: "Curry de lentilles et riz basmati", ingredients: ["Lentilles", "Riz basmati", "Lait de coco", "Épices", "Épinards"] },
-      { name: "Tajine de poulet aux abricots et amandes", ingredients: ["Poulet", "Abricots secs", "Amandes", "Semoule", "Épices"] },
-      { name: "Lasagnes aux légumes", ingredients: ["Pâtes à lasagnes", "Courgettes", "Tomates", "Fromage", "Béchamel"] }
-    ];
+    <div id="shopping-list" class="hidden">
+        <h2>Liste des courses</h2>
+        <ul id="shopping-items"></ul>
+    </div>
 
-    function generateMeals() {
-      const selectedMeals = [];
-      while (selectedMeals.length < 5) {
-        const randomMeal = meals[Math.floor(Math.random() * meals.length)];
-        if (!selectedMeals.includes(randomMeal)) {
-          selectedMeals.push(randomMeal);
+    <div id="recipes" class="hidden">
+        <h2>Recettes</h2>
+        <div id="recipe-details"></div>
+    </div>
+
+    <script>
+        const recipes = [
+            { name: "Poulet aux légumes", ingredients: { "Poulet": "500g", "Carottes": "4", "Courgettes": "2", "Ail": "2 gousses" }, recipe: "Faire revenir le poulet, ajouter les légumes coupés et cuire 20 min." },
+            { name: "Saumon au riz et brocolis", ingredients: { "Saumon": "4 filets", "Riz": "300g", "Brocolis": "1 tête" }, recipe: "Cuire le saumon au four, accompagner de riz et brocolis vapeur." },
+            { name: "Salade de quinoa", ingredients: { "Quinoa": "200g", "Tomates": "3", "Avocat": "1", "Féta": "100g" }, recipe: "Cuire le quinoa, mélanger avec les légumes et la fêta." },
+            { name: "Pâtes complètes aux légumes", ingredients: { "Pâtes complètes": "300g", "Poivrons": "2", "Champignons": "200g", "Crème légère": "100ml" }, recipe: "Cuire les pâtes et ajouter les légumes sautés avec la crème." },
+            { name: "Tajine de pois chiches", ingredients: { "Pois chiches": "400g", "Carottes": "3", "Raisins secs": "50g", "Épices à tajine": "1 c. à café" }, recipe: "Cuire les pois chiches avec les légumes et les épices." },
+            { name: "Omelette aux épinards", ingredients: { "Œufs": "8", "Épinards": "300g", "Fromage râpé": "100g" }, recipe: "Battre les œufs, ajouter les épinards et cuire à feu doux." },
+            { name: "Cabillaud au curry", ingredients: { "Cabillaud": "4 filets", "Lait de coco": "200ml", "Curry": "1 c. à café", "Riz basmati": "300g" }, recipe: "Cuire le cabillaud avec le lait de coco et le curry, servir avec le riz." },
+            { name: "Chili sin carne", ingredients: { "Haricots rouges": "400g", "Tomates": "4", "Poivron rouge": "1", "Épices chili": "1 c. à café" }, recipe: "Faire mijoter les haricots rouges avec les légumes et les épices." },
+            { name: "Gratin de légumes", ingredients: { "Courgettes": "2", "Aubergines": "2", "Fromage râpé": "100g", "Crème légère": "100ml" }, recipe: "Alterner légumes et crème, parsemer de fromage et cuire au four." },
+            { name: "Boulettes de viande", ingredients: { "Bœuf haché": "500g", "Oignons": "2", "Tomates concassées": "400g", "Persil": "1 bouquet" }, recipe: "Former des boulettes, cuire avec la sauce tomate et le persil." },
+            // Ajoute 10 autres recettes similaires
+        ];
+
+        let currentMeals = [];
+
+        function generateMeals() {
+            const mealsList = document.getElementById("meals-list");
+            mealsList.innerHTML = "";
+
+            const selectedRecipes = [];
+            while (selectedRecipes.length < 7) {
+                const randomRecipe = recipes[Math.floor(Math.random() * recipes.length)];
+                if (!selectedRecipes.includes(randomRecipe)) {
+                    selectedRecipes.push(randomRecipe);
+                }
+            }
+
+            currentMeals = selectedRecipes;
+            selectedRecipes.forEach(recipe => {
+                const li = document.createElement("li");
+                li.textContent = recipe.name;
+                mealsList.appendChild(li);
+            });
         }
-      }
-      return selectedMeals;
-    }
 
-    function displayMeals(meals) {
-      const mealsList = document.getElementById("meals-list");
-      mealsList.innerHTML = "";
-      meals.forEach(meal => {
-        const li = document.createElement("li");
-        li.textContent = meal.name;
-        mealsList.appendChild(li);
-      });
-    }
+        function validateMeals() {
+            const shoppingList = document.getElementById("shopping-items");
+            shoppingList.innerHTML = "";
 
-    function displayShoppingList(ingredients) {
-      const shoppingItems = document.getElementById("shopping-items");
-      shoppingItems.innerHTML = "";
-      ingredients.forEach(item => {
-        const li = document.createElement("li");
-        li.textContent = item;
-        shoppingItems.appendChild(li);
-      });
-    }
+            const shoppingItems = {};
+            currentMeals.forEach(meal => {
+                for (const [ingredient, quantity] of Object.entries(meal.ingredients)) {
+                    if (shoppingItems[ingredient]) {
+                        shoppingItems[ingredient] += `, ${quantity}`;
+                    } else {
+                        shoppingItems[ingredient] = quantity;
+                    }
+                }
+            });
 
-    function displayTodoList(ingredients) {
-      const todoItems = document.getElementById("todo-items");
-      todoItems.innerHTML = "";
-      ingredients.forEach(item => {
-        const li = document.createElement("li");
-        li.className = "todo-item";
-        const checkbox = document.createElement("input");
-        checkbox.type = "checkbox";
-        li.appendChild(checkbox);
-        li.appendChild(document.createTextNode(item));
-        todoItems.appendChild(li);
-      });
-    }
+            for (const [ingredient, quantity] of Object.entries(shoppingItems)) {
+                const li = document.createElement("li");
+                const checkbox = document.createElement("input");
+                checkbox.type = "checkbox";
+                li.appendChild(checkbox);
+                li.appendChild(document.createTextNode(` ${ingredient}: ${quantity}`));
+                shoppingList.appendChild(li);
+            }
 
-    let currentMeals = [];
+            document.getElementById("shopping-list").classList.remove("hidden");
+            document.getElementById("recipes").classList.remove("hidden");
+            displayRecipes();
+        }
 
-    document.getElementById("generate-meals").addEventListener("click", () => {
-      currentMeals = generateMeals();
-      displayMeals(currentMeals);
-      document.getElementById("meal-plans").style.display = "block";
-    });
+        function displayRecipes() {
+            const recipeDetails = document.getElementById("recipe-details");
+            recipeDetails.innerHTML = "";
 
-    document.getElementById("validate-meals").addEventListener("click", () => {
-      const ingredients = currentMeals.flatMap(meal => meal.ingredients);
-      displayShoppingList([...new Set(ingredients)]);
-      document.getElementById("shopping-list").style.display = "block";
-    });
+            currentMeals.forEach(meal => {
+                const p = document.createElement("p");
+                p.innerHTML = `<strong>${meal.name}</strong>: ${meal.recipe}`;
+                recipeDetails.appendChild(p);
+            });
+        }
 
-    document.getElementById("regenerate-meals").addEventListener("click", () => {
-      currentMeals = generateMeals();
-      displayMeals(currentMeals);
-      document.getElementById("shopping-list").style.display = "none";
-      document.getElementById("todo-list").style.display = "none";
-    });
-
-    document.getElementById("validate-shopping").addEventListener("click", () => {
-      const ingredients = currentMeals.flatMap(meal => meal.ingredients);
-      displayTodoList([...new Set(ingredients)]);
-      document.getElementById("todo-list").style.display = "block";
-    });
-  </script>
+        // Initial generation
+        generateMeals();
+    </script>
 </body>
 </html>
