@@ -106,6 +106,39 @@
             color: #333;
         }
 
+        /* Navigation bar styles */
+        .navbar {
+            width: 100%;
+            display: flex;
+            justify-content: space-around;
+            margin-bottom: 20px;
+        }
+
+        .navbar button {
+            width: auto;
+            padding: 10px;
+            font-size: 16px;
+            background-color: #4CAF50;
+            color: white;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .navbar button:hover {
+            background-color: #3e8e41;
+        }
+
+        /* Small button for changing meals */
+        .change-button {
+            font-size: 12px;
+            padding: 5px;
+            background-color: #f4f4f9;
+            border: 1px solid #4CAF50;
+            cursor: pointer;
+            border-radius: 8px;
+        }
+
         /* Mobile-responsive styles */
         @media (max-width: 600px) {
             h1 {
@@ -131,11 +164,16 @@
 <body>
     <h1>Planificateur de Plats Équilibrés</h1>
 
+    <!-- Navigation Bar -->
+    <div class="navbar">
+        <button onclick="showSavedMeals()">Plats Sauvegardés</button>
+        <button onclick="generateMeals()">Générer de nouveaux plats</button>
+    </div>
+
     <!-- Propositions de plats -->
     <div class="container" id="meal-proposals">
         <h2>Propositions de plats</h2>
         <ul id="meals-list"></ul>
-        <button onclick="generateMeals()">Générer 7 autres plats</button>
         <button onclick="validateMeals()">Valider ces plats</button>
     </div>
 
@@ -213,6 +251,7 @@
                 li.textContent = recipe.name;
                 const changeButton = document.createElement("button");
                 changeButton.textContent = "Changer";
+                changeButton.classList.add("change-button");
                 changeButton.onclick = () => changeMeal(index);
                 li.appendChild(changeButton);
                 mealsList.appendChild(li);
