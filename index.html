@@ -136,16 +136,34 @@
         <button onclick="validateMeals()">Valider ces plats</button>
     </div>
 
+    <!-- Sélection de la période -->
+    <div class="container hidden" id="period-selection">
+        <h2>Sélectionner une période</h2>
+        <input type="date" id="start-date">
+        <input type="date" id="end-date">
+        <button onclick="saveMealsForPeriod()">Sauvegarder les plats pour la période</button>
+        <button onclick="backToMeals()">Retour aux plats</button>
+    </div>
+
+    <!-- Liste des plats sauvegardés -->
+    <div class="container hidden" id="saved-meals">
+        <h2>Plats sauvegardés</h2>
+        <ul id="saved-meals-list"></ul>
+        <button onclick="backToMeals()">Retour aux plats</button>
+    </div>
+
     <!-- Liste des courses -->
     <div class="container hidden" id="shopping-list">
         <h2>Liste des courses</h2>
         <ul id="shopping-items"></ul>
+        <button onclick="backToMeals()">Retour aux plats</button>
     </div>
 
     <!-- Recettes -->
     <div class="container hidden" id="recipes">
         <h2>Recettes</h2>
         <div id="recipe-details"></div>
+        <button onclick="backToMeals()">Retour aux plats</button>
     </div>
 
     <script>
@@ -163,7 +181,9 @@
         ];
 
         let currentMeals = [];
+        let savedMeals = [];
 
+        // Fonction pour générer les plats
         function generateMeals() {
             const mealsList = document.getElementById("meals-list");
             mealsList.innerHTML = "";
@@ -182,50 +202,69 @@
                 li.textContent = recipe.name;
                 mealsList.appendChild(li);
             });
+
+            document.getElementById("meal-proposals").classList.remove("hidden");
         }
 
+        // Fonction pour valider les plats et choisir une période
         function validateMeals() {
-            const shoppingList = document.getElementById("shopping-items");
-            shoppingList.innerHTML = "";
+            document.getElementById("meal-proposals").classList.add("hidden");
+            document.getElementById("period-selection").classList.remove("hidden");
+        }
 
-            const shoppingItems = {};
-            currentMeals.forEach(meal => {
-                for (const [ingredient, quantity] of Object.entries(meal.ingredients)) {
-                    if (shoppingItems[ingredient]) {
-                        shoppingItems[ingredient] += `, ${quantity}`;
-                    } else {
-                        shoppingItems[ingredient] = quantity;
-                    }
-                }
-            });
+        // Sauvegarder les plats pour une période donnée
+        function saveMealsForPeriod() {
+            const startDate = document.getElementById("start-date").value;
+            const endDate = document.getElementById("end-date").value;
 
-            for (const [ingredient, quantity] of Object.entries(shoppingItems)) {
-                const li = document.createElement("li");
-                const checkbox = document.createElement("input");
-                checkbox.type = "checkbox";
-                li.appendChild(checkbox);
-                li.appendChild(document.createTextNode(` ${ingredient}: ${quantity}`));
-                shoppingList.appendChild(li);
+            if (!startDate || !endDate) {
+                alert("Veuillez sélectionner une période valide.");
+                return;
             }
 
-            document.getElementById("shopping-list").classList.remove("hidden");
-            document.getElementById("recipes").classList.remove("hidden");
-            displayRecipes();
+            savedMeals.push({ startDate, endDate, meals: currentMeals });
+            displaySavedMeals();
+
+            document.getElementById("period-selection").classList.add("hidden");
+            document.getElementById("saved-meals").classList.remove("hidden");
         }
 
-        function displayRecipes() {
+        // Afficher les plats sauvegardés
+        function displaySavedMeals() {
+            const savedMealsList = document.getElementById("saved-meals-list");
+            savedMealsList.innerHTML = "";
+
+            savedMeals.forEach((meal, index) => {
+                const li = document.createElement("li");
+                li.innerHTML = `${meal.startDate} - ${meal.endDate} <button onclick="viewRecipes(${index})">Voir les recettes</button>`;
+                savedMealsList.appendChild(li);
+            });
+        }
+
+        // Afficher les recettes du plat sélectionné
+        function viewRecipes(mealIndex) {
             const recipeDetails = document.getElementById("recipe-details");
             recipeDetails.innerHTML = "";
+            const selectedMeals = savedMeals[mealIndex].meals;
 
-            currentMeals.forEach(meal => {
+            selectedMeals.forEach(meal => {
                 const p = document.createElement("p");
                 p.innerHTML = `<strong>${meal.name}</strong>: ${meal.recipe}`;
                 recipeDetails.appendChild(p);
             });
+
+            document.getElementById("saved-meals").classList.add("hidden");
+            document.getElementById("recipes").classList.remove("hidden");
         }
 
-        // Initial generation
-        generateMeals();
+        // Revenir à la sélection des plats
+        function backToMeals() {
+            document.getElementById("period-selection").classList.add("hidden");
+            document.getElementById("saved-meals").classList.add("hidden");
+            document.getElementById("shopping-list").classList.add("hidden");
+            document.getElementById("recipes").classList.add("hidden");
+            document.getElementById("meal-proposals").classList.remove("hidden");
+        }
     </script>
 </body>
 </html>
