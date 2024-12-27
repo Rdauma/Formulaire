@@ -5,46 +5,100 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Plats Équilibrés</title>
     <style>
+        /* Global styles */
         body {
-            font-family: Arial, sans-serif;
-            margin: 20px;
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f9;
+            color: #333;
         }
+
+        h1, h2 {
+            text-align: center;
+            color: #4CAF50;
+        }
+
         button {
+            display: inline-block;
             margin: 10px;
-            padding: 10px 15px;
+            padding: 10px 20px;
             background-color: #4CAF50;
             color: white;
             border: none;
             cursor: pointer;
-            border-radius: 5px;
+            border-radius: 25px;
+            font-size: 16px;
+            transition: all 0.3s ease;
         }
+
         button:hover {
-            background-color: #45a049;
+            background-color: #3e8e41;
+            transform: scale(1.05);
         }
-        .hidden {
-            display: none;
-        }
+
         ul {
             list-style-type: none;
             padding: 0;
         }
+
+        li {
+            background-color: #fff;
+            margin: 5px 0;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 20px auto;
+            background: #ffffff;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        #shopping-items li {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        input[type="checkbox"] {
+            transform: scale(1.2);
+            cursor: pointer;
+        }
+
+        #recipe-details p {
+            padding: 10px;
+            margin: 10px 0;
+            background: #eef9ee;
+            border-left: 4px solid #4CAF50;
+            border-radius: 5px;
+        }
     </style>
 </head>
 <body>
-    <h1>Plats Équilibrés</h1>
-    <div id="meal-proposals">
+    <h1>Planificateur de Plats Équilibrés</h1>
+    <div class="container" id="meal-proposals">
         <h2>Propositions de plats</h2>
         <ul id="meals-list"></ul>
         <button onclick="generateMeals()">Générer 7 autres plats</button>
         <button onclick="validateMeals()">Valider ces plats</button>
     </div>
 
-    <div id="shopping-list" class="hidden">
+    <div class="container hidden" id="shopping-list">
         <h2>Liste des courses</h2>
         <ul id="shopping-items"></ul>
     </div>
 
-    <div id="recipes" class="hidden">
+    <div class="container hidden" id="recipes">
         <h2>Recettes</h2>
         <div id="recipe-details"></div>
     </div>
@@ -61,7 +115,6 @@
             { name: "Chili sin carne", ingredients: { "Haricots rouges": "400g", "Tomates": "4", "Poivron rouge": "1", "Épices chili": "1 c. à café" }, recipe: "Faire mijoter les haricots rouges avec les légumes et les épices." },
             { name: "Gratin de légumes", ingredients: { "Courgettes": "2", "Aubergines": "2", "Fromage râpé": "100g", "Crème légère": "100ml" }, recipe: "Alterner légumes et crème, parsemer de fromage et cuire au four." },
             { name: "Boulettes de viande", ingredients: { "Bœuf haché": "500g", "Oignons": "2", "Tomates concassées": "400g", "Persil": "1 bouquet" }, recipe: "Former des boulettes, cuire avec la sauce tomate et le persil." },
-            // Ajoute 10 autres recettes similaires
         ];
 
         let currentMeals = [];
