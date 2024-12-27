@@ -6,29 +6,52 @@
     <title>Plats Équilibrés</title>
     <style>
         /* Global styles */
-        body {
-            font-family: 'Arial', sans-serif;
+        * {
+            box-sizing: border-box;
             margin: 0;
             padding: 0;
-            background-color: #f4f4f9;
-            color: #333;
         }
 
-        h1, h2 {
-            text-align: center;
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f4f4f9;
+            color: #333;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            flex-direction: column;
+            padding: 20px;
+        }
+
+        h1 {
+            font-size: 24px;
             color: #4CAF50;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .container {
+            background-color: #ffffff;
+            width: 100%;
+            max-width: 500px;
+            border-radius: 12px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            margin-bottom: 20px;
         }
 
         button {
-            display: inline-block;
-            margin: 10px;
-            padding: 10px 20px;
+            display: block;
+            width: 100%;
+            padding: 12px;
             background-color: #4CAF50;
             color: white;
             border: none;
             cursor: pointer;
             border-radius: 25px;
             font-size: 16px;
+            margin-top: 10px;
             transition: all 0.3s ease;
         }
 
@@ -44,24 +67,20 @@
 
         li {
             background-color: #fff;
-            margin: 5px 0;
-            padding: 10px;
-            border: 1px solid #ddd;
+            margin: 8px 0;
+            padding: 12px;
             border-radius: 8px;
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            font-size: 16px;
+            color: #555;
+        }
+
+        li strong {
+            color: #4CAF50;
         }
 
         .hidden {
             display: none;
-        }
-
-        .container {
-            max-width: 800px;
-            margin: 20px auto;
-            background: #ffffff;
-            border-radius: 8px;
-            padding: 20px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
         }
 
         #shopping-items li {
@@ -81,11 +100,35 @@
             background: #eef9ee;
             border-left: 4px solid #4CAF50;
             border-radius: 5px;
+            color: #333;
+        }
+
+        /* Mobile-responsive styles */
+        @media (max-width: 600px) {
+            h1 {
+                font-size: 20px;
+            }
+
+            button {
+                font-size: 14px;
+                padding: 10px;
+            }
+
+            .container {
+                padding: 15px;
+            }
+
+            li {
+                font-size: 14px;
+                padding: 10px;
+            }
         }
     </style>
 </head>
 <body>
     <h1>Planificateur de Plats Équilibrés</h1>
+
+    <!-- Propositions de plats -->
     <div class="container" id="meal-proposals">
         <h2>Propositions de plats</h2>
         <ul id="meals-list"></ul>
@@ -93,11 +136,13 @@
         <button onclick="validateMeals()">Valider ces plats</button>
     </div>
 
+    <!-- Liste des courses -->
     <div class="container hidden" id="shopping-list">
         <h2>Liste des courses</h2>
         <ul id="shopping-items"></ul>
     </div>
 
+    <!-- Recettes -->
     <div class="container hidden" id="recipes">
         <h2>Recettes</h2>
         <div id="recipe-details"></div>
