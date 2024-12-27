@@ -41,14 +41,16 @@
         }
 
         button {
-            display: inline-block;
-            padding: 10px 15px;
+            display: block;
+            width: 100%;
+            padding: 12px;
             background-color: #4CAF50;
             color: white;
             border: none;
             cursor: pointer;
             border-radius: 25px;
-            font-size: 14px;
+            font-size: 16px;
+            margin-top: 10px;
             transition: all 0.3s ease;
         }
 
@@ -63,9 +65,6 @@
         }
 
         li {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
             background-color: #fff;
             margin: 8px 0;
             padding: 12px;
@@ -73,22 +72,75 @@
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
             font-size: 16px;
             color: #555;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
         }
 
-        li span {
-            flex-grow: 1;
-            margin-right: 10px;
+        li strong {
+            color: #4CAF50;
         }
 
-        /* Responsive */
+        .hidden {
+            display: none;
+        }
+
+        #shopping-items li {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        input[type="checkbox"] {
+            transform: scale(1.2);
+            cursor: pointer;
+        }
+
+        #recipe-details p {
+            padding: 10px;
+            margin: 10px 0;
+            background: #eef9ee;
+            border-left: 4px solid #4CAF50;
+            border-radius: 5px;
+            color: #333;
+        }
+
+        /* Navigation bar styles */
+        .navbar {
+            width: 100%;
+            display: flex;
+            justify-content: space-around;
+            margin-bottom: 20px;
+        }
+
+        .navbar button {
+            width: auto;
+            padding: 10px;
+            font-size: 16px;
+            background-color: #4CAF50;
+            color: white;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .navbar button:hover {
+            background-color: #3e8e41;
+        }
+
+        /* Mobile-responsive styles */
         @media (max-width: 600px) {
             h1 {
                 font-size: 20px;
             }
 
             button {
-                font-size: 12px;
-                padding: 8px 12px;
+                font-size: 14px;
+                padding: 10px;
+            }
+
+            .container {
+                padding: 15px;
             }
 
             li {
@@ -100,70 +152,205 @@
 </head>
 <body>
     <h1>Planificateur de Plats Équilibrés</h1>
+
+    <!-- Navigation Bar -->
+    <div class="navbar">
+        <button onclick="toggleMenu()">Menu</button>
+    </div>
+
+    <!-- Menu -->
+    <div id="menu-options" class="hidden">
+        <button onclick="showSavedMeals()">Plats Sauvegardés</button>
+        <button onclick="backToMeals()">Retour aux plats</button>
+    </div>
+
+    <!-- Propositions de plats -->
     <div class="container" id="meal-proposals">
         <h2>Propositions de plats</h2>
         <ul id="meals-list"></ul>
         <button onclick="validateMeals()">Valider ces plats</button>
     </div>
 
+    <!-- Sélection de la période -->
+    <div class="container hidden" id="period-selection">
+        <h2>Sélectionner une période</h2>
+        <input type="date" id="start-date">
+        <input type="date" id="end-date">
+        <button onclick="saveMealsForPeriod()">Sauvegarder les plats pour la période</button>
+        <button onclick="backToMeals()">Retour aux plats</button>
+    </div>
+
+    <!-- Liste des plats sauvegardés -->
+    <div class="container hidden" id="saved-meals">
+        <h2>Plats sauvegardés</h2>
+        <ul id="saved-meals-list"></ul>
+        <button onclick="backToMeals()">Retour aux plats</button>
+    </div>
+
+    <!-- Choisir l'action pour la période (recettes ou liste de courses) -->
+    <div class="container hidden" id="action-selection">
+        <h2>Que souhaitez-vous voir ?</h2>
+        <button onclick="showRecipes()">Voir les recettes</button>
+        <button onclick="showShoppingList()">Voir la liste de courses</button>
+        <button onclick="backToSavedMeals()">Retour aux plats sauvegardés</button>
+    </div>
+
+    <!-- Liste des courses -->
+    <div class="container hidden" id="shopping-list">
+        <h2>Liste des courses (pour 4 personnes)</h2>
+        <ul id="shopping-items"></ul>
+        <button onclick="backToMeals()">Retour aux plats</button>
+    </div>
+
+    <!-- Recettes -->
+    <div class="container hidden" id="recipes">
+        <h2>Recettes</h2>
+        <div id="recipe-details"></div>
+        <button onclick="backToMeals()">Retour aux plats</button>
+    </div>
+
     <script>
         const recipes = [
-            { name: "Poulet aux légumes" },
-            { name: "Saumon au riz et brocolis" },
-            { name: "Salade de quinoa" },
-            { name: "Pâtes complètes aux légumes" },
-            { name: "Tajine de pois chiches" },
-            { name: "Omelette aux épinards" },
-            { name: "Cabillaud au curry" },
-            { name: "Chili sin carne" },
-            { name: "Gratin de légumes" },
-            { name: "Boulettes de viande" },
+            { name: "Poulet aux légumes", ingredients: { "Poulet": "500g", "Carottes": "4", "Courgettes": "2", "Ail": "2 gousses" }, recipe: "Faire revenir le poulet, ajouter les légumes coupés et cuire 20 min." },
+            { name: "Saumon au riz et brocolis", ingredients: { "Saumon": "4 filets", "Riz": "300g", "Brocolis": "1 tête" }, recipe: "Cuire le saumon au four, accompagner de riz et brocolis vapeur." },
+            { name: "Salade de quinoa", ingredients: { "Quinoa": "200g", "Tomates": "3", "Avocat": "1", "Féta": "100g" }, recipe: "Cuire le quinoa, mélanger avec les légumes et la fêta." },
+            { name: "Pâtes complètes aux légumes", ingredients: { "Pâtes complètes": "300g", "Poivrons": "2", "Champignons": "200g", "Crème légère": "100ml" }, recipe: "Cuire les pâtes et ajouter les légumes sautés avec la crème." },
+            { name: "Tajine de pois chiches", ingredients: { "Pois chiches": "400g", "Carottes": "3", "Raisins secs": "50g", "Épices à tajine": "1 c. à café" }, recipe: "Cuire les pois chiches avec les légumes et les épices." },
+            { name: "Omelette aux épinards", ingredients: { "Œufs": "8", "Épinards": "300g", "Fromage râpé": "100g" }, recipe: "Battre les œufs, ajouter les épinards et cuire à feu doux." },
+            { name: "Cabillaud au curry", ingredients: { "Cabillaud": "4 filets", "Lait de coco": "200ml", "Curry": "1 c. à café", "Riz basmati": "300g" }, recipe: "Cuire le cabillaud avec le lait de coco et le curry, servir avec le riz." },
+            { name: "Chili sin carne", ingredients: { "Haricots rouges": "400g", "Tomates": "4", "Poivron rouge": "1", "Épices chili": "1 c. à café" }, recipe: "Faire mijoter les haricots rouges avec les légumes et les épices." },
+            { name: "Gratin de légumes", ingredients: { "Courgettes": "2", "Aubergines": "2", "Fromage râpé": "100g", "Crème légère": "100ml" }, recipe: "Alterner légumes et crème, parsemer de fromage et cuire au four." },
+            { name: "Boulettes de viande", ingredients: { "Bœuf haché": "500g", "Oignons": "2", "Tomates concassées": "400g", "Persil": "1 bouquet" }, recipe: "Former des boulettes, cuire avec la sauce tomate et le persil." },
         ];
 
         let currentMeals = [];
+        let savedMeals = [];
 
         // Fonction pour générer les plats
         function generateMeals() {
             const mealsList = document.getElementById("meals-list");
             mealsList.innerHTML = "";
 
-            currentMeals = [];
-            for (let i = 0; i < 7; i++) {
+            const selectedRecipes = [];
+            while (selectedRecipes.length < 7) {
                 const randomRecipe = recipes[Math.floor(Math.random() * recipes.length)];
-                currentMeals.push(randomRecipe);
+                if (!selectedRecipes.includes(randomRecipe)) {
+                    selectedRecipes.push(randomRecipe);
+                }
             }
 
-            currentMeals.forEach((meal, index) => {
+            currentMeals = selectedRecipes;
+            selectedRecipes.forEach((recipe) => {
                 const li = document.createElement("li");
-
-                const mealName = document.createElement("span");
-                mealName.textContent = meal.name;
-
-                const changeButton = document.createElement("button");
-                changeButton.textContent = "Changer";
-                changeButton.onclick = () => changeMeal(index);
-
-                li.appendChild(mealName);
-                li.appendChild(changeButton);
+                li.textContent = recipe.name;
+                li.onclick = () => changeMeal(recipe);
                 mealsList.appendChild(li);
             });
         }
 
-        // Fonction pour changer un plat
-        function changeMeal(index) {
-            const newMeal = recipes[Math.floor(Math.random() * recipes.length)];
-            currentMeals[index] = newMeal;
-
-            // Rafraîchir la liste des plats
+        // Fonction pour changer un plat généré aléatoirement
+        function changeMeal(recipe) {
+            const randomRecipe = recipes[Math.floor(Math.random() * recipes.length)];
+            const index = currentMeals.indexOf(recipe);
+            if (index !== -1) {
+                currentMeals[index] = randomRecipe;
+            }
             generateMeals();
         }
 
-        // Fonction pour valider les plats
+        // Fonction pour valider les plats et demander la période
         function validateMeals() {
-            alert("Plats validés : " + currentMeals.map(meal => meal.name).join(", "));
+            document.getElementById("meal-proposals").classList.add("hidden");
+            document.getElementById("period-selection").classList.remove("hidden");
         }
 
-        // Initialisation
+        // Fonction pour sauvegarder les plats pour une période
+        function saveMealsForPeriod() {
+            const startDate = document.getElementById("start-date").value;
+            const endDate = document.getElementById("end-date").value;
+            savedMeals.push({ startDate, endDate, meals: currentMeals });
+
+            document.getElementById("period-selection").classList.add("hidden");
+            showSavedMeals();
+        }
+
+        // Fonction pour afficher les plats sauvegardés
+        function showSavedMeals() {
+            const savedMealsList = document.getElementById("saved-meals-list");
+            savedMealsList.innerHTML = "";
+            savedMeals.forEach((meal, index) => {
+                const li = document.createElement("li");
+                li.textContent = `Période : ${meal.startDate} - ${meal.endDate}`;
+                const viewButton = document.createElement("button");
+                viewButton.textContent = "Voir";
+                viewButton.onclick = () => viewSavedMeal(index);
+                li.appendChild(viewButton);
+                savedMealsList.appendChild(li);
+            });
+
+            document.getElementById("saved-meals").classList.remove("hidden");
+        }
+
+        // Fonction pour afficher les recettes ou la liste de courses
+        function viewSavedMeal(index) {
+            const savedMeal = savedMeals[index];
+            document.getElementById("saved-meals").classList.add("hidden");
+            document.getElementById("action-selection").classList.remove("hidden");
+            currentMeals = savedMeal.meals;
+        }
+
+        // Fonction pour afficher les recettes des plats sauvegardés
+        function showRecipes() {
+            const recipeDetails = document.getElementById("recipe-details");
+            recipeDetails.innerHTML = "";
+            currentMeals.forEach((meal) => {
+                const p = document.createElement("p");
+                p.textContent = `${meal.name}: ${meal.recipe}`;
+                recipeDetails.appendChild(p);
+            });
+            document.getElementById("action-selection").classList.add("hidden");
+            document.getElementById("recipes").classList.remove("hidden");
+        }
+
+        // Fonction pour afficher la liste de courses
+        function showShoppingList() {
+            const shoppingItems = document.getElementById("shopping-items");
+            shoppingItems.innerHTML = "";
+            currentMeals.forEach((meal) => {
+                for (const ingredient in meal.ingredients) {
+                    const li = document.createElement("li");
+                    li.textContent = `${ingredient}: ${meal.ingredients[ingredient]}`;
+                    shoppingItems.appendChild(li);
+                }
+            });
+            document.getElementById("action-selection").classList.add("hidden");
+            document.getElementById("shopping-list").classList.remove("hidden");
+        }
+
+        // Retour à l'écran des plats sauvegardés
+        function backToSavedMeals() {
+            document.getElementById("action-selection").classList.add("hidden");
+            document.getElementById("saved-meals").classList.remove("hidden");
+        }
+
+        // Retour à l'écran des plats
+        function backToMeals() {
+            document.getElementById("meal-proposals").classList.remove("hidden");
+            document.getElementById("period-selection").classList.add("hidden");
+            document.getElementById("action-selection").classList.add("hidden");
+            document.getElementById("saved-meals").classList.add("hidden");
+            document.getElementById("recipes").classList.add("hidden");
+            document.getElementById("shopping-list").classList.add("hidden");
+            generateMeals();
+        }
+
+        // Toggle du menu
+        function toggleMenu() {
+            const menuOptions = document.getElementById("menu-options");
+            menuOptions.classList.toggle("hidden");
+        }
+
+        // Initialisation des plats
         generateMeals();
     </script>
 </body>
