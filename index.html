@@ -3,62 +3,35 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Plats Équilibrés</title>
+    <title>Planificateur de Plats</title>
     <style>
         * {
             box-sizing: border-box;
-            margin: 0;
-            padding: 0;
         }
 
         body {
-            font-family: 'Arial', sans-serif;
+            font-family: Arial, sans-serif;
             background-color: #f4f4f9;
-            color: #333;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            flex-direction: column;
+            margin: 0;
             padding: 20px;
-        }
-
-        h1 {
-            font-size: 24px;
-            color: #4CAF50;
-            margin-bottom: 20px;
-            text-align: center;
         }
 
         .container {
-            background-color: #ffffff;
-            width: 100%;
-            max-width: 500px;
-            border-radius: 12px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            max-width: 600px;
+            margin: 0 auto;
+            background: #fff;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
             padding: 20px;
-            margin-bottom: 20px;
         }
 
-        button {
-            display: inline-block;
-            padding: 10px 15px;
-            background-color: #4CAF50;
-            color: white;
-            border: none;
-            cursor: pointer;
-            border-radius: 25px;
-            font-size: 14px;
-            transition: all 0.3s ease;
-        }
-
-        button:hover {
-            background-color: #3e8e41;
-            transform: scale(1.05);
+        h1, h2 {
+            text-align: center;
+            color: #4CAF50;
         }
 
         ul {
-            list-style-type: none;
+            list-style: none;
             padding: 0;
         }
 
@@ -66,18 +39,23 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            background-color: #fff;
-            margin: 8px 0;
-            padding: 12px;
-            border-radius: 8px;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-            font-size: 16px;
-            color: #555;
+            background: #f9f9f9;
+            padding: 10px;
+            border-radius: 5px;
+            margin: 5px 0;
         }
 
-        li span {
-            flex-grow: 1;
-            margin-right: 10px;
+        button {
+            padding: 10px 15px;
+            background: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background: #45a049;
         }
 
         #date-selection {
@@ -91,27 +69,44 @@
             border-radius: 5px;
             border: 1px solid #ccc;
         }
+
+        .hidden {
+            display: none;
+        }
     </style>
 </head>
 <body>
-    <h1>Planificateur de Plats Équilibrés</h1>
+    <div class="container">
+        <h1>Planificateur de Plats</h1>
 
-    <div class="container" id="meal-proposals">
-        <h2>Propositions de plats</h2>
-        <ul id="meals-list"></ul>
-        <div id="date-selection">
+        <div id="meal-section">
+            <h2>Propositions de plats</h2>
+            <ul id="meals-list"></ul>
+            <button onclick="validateMeals()">Valider ces plats</button>
+        </div>
+
+        <div id="date-selection" class="hidden">
+            <h2>Choisir une période</h2>
             <label for="start-date">Début :</label>
             <input type="date" id="start-date">
             <label for="end-date">Fin :</label>
             <input type="date" id="end-date">
+            <button onclick="saveMeals()">Sauvegarder</button>
         </div>
-        <button onclick="validateMeals()">Valider ces plats</button>
-    </div>
 
-    <div class="container" id="shopping-list" style="display: none;">
-        <h2>Liste des courses</h2>
-        <ul id="shopping-items"></ul>
-        <button onclick="goBack()">Retour</button>
+        <div id="saved-section" class="hidden">
+            <h2>Plats sauvegardés</h2>
+            <ul id="saved-meals-list"></ul>
+            <button onclick="generateShoppingList()">Générer liste de courses</button>
+        </div>
+
+        <div id="shopping-section" class="hidden">
+            <h2>Liste de courses</h2>
+            <ul id="shopping-list"></ul>
+            <h2>Recettes</h2>
+            <ul id="recipe-list"></ul>
+            <button onclick="goBack()">Retour</button>
+        </div>
     </div>
 
     <script>
@@ -124,6 +119,7 @@
         ];
 
         let currentMeals = [];
+        let savedMeals = [];
 
         // Génère les plats
         function generateMeals() {
@@ -159,8 +155,14 @@
             generateMeals();
         }
 
-        // Valide les plats et génère la liste de courses
+        // Valide les plats et affiche la sélection de dates
         function validateMeals() {
+            document.getElementById("meal-section").classList.add("hidden");
+            document.getElementById("date-selection").classList.remove("hidden");
+        }
+
+        // Sauvegarde les plats avec la période
+        function saveMeals() {
             const startDate = document.getElementById("start-date").value;
             const endDate = document.getElementById("end-date").value;
 
@@ -169,19 +171,51 @@
                 return;
             }
 
-            const shoppingList = document.getElementById("shopping-items");
+            savedMeals.push({ period: `${startDate} - ${endDate}`, meals: [...currentMeals] });
+
+            alert("Plats sauvegardés !");
+            document.getElementById("date-selection").classList.add("hidden");
+            document.getElementById("saved-section").classList.remove("hidden");
+
+            displaySavedMeals();
+        }
+
+        // Affiche les plats sauvegardés
+        function displaySavedMeals() {
+            const savedList = document.getElementById("saved-meals-list");
+            savedList.innerHTML = "";
+
+            savedMeals.forEach((entry, index) => {
+                const li = document.createElement("li");
+                li.textContent = `Période : ${entry.period} - Plats : ${entry.meals.map(m => m.name).join(", ")}`;
+                savedList.appendChild(li);
+            });
+        }
+
+        // Génère la liste de courses
+        function generateShoppingList() {
+            const shoppingList = document.getElementById("shopping-list");
+            const recipeList = document.getElementById("recipe-list");
+
             shoppingList.innerHTML = "";
+            recipeList.innerHTML = "";
 
             const ingredientsCount = {};
 
-            currentMeals.forEach(meal => {
-                for (const [ingredient, quantity] of Object.entries(meal.ingredients)) {
-                    if (ingredientsCount[ingredient]) {
-                        ingredientsCount[ingredient] += `, ${quantity}`;
-                    } else {
-                        ingredientsCount[ingredient] = quantity;
+            savedMeals.forEach(entry => {
+                entry.meals.forEach(meal => {
+                    for (const [ingredient, quantity] of Object.entries(meal.ingredients)) {
+                        if (ingredientsCount[ingredient]) {
+                            ingredientsCount[ingredient] += `, ${quantity}`;
+                        } else {
+                            ingredientsCount[ingredient] = quantity;
+                        }
                     }
-                }
+
+                    const recipeLi = document.createElement("li");
+                    recipeLi.textContent = `${meal.name}: ${Object.entries(meal.ingredients).map(([key, value]) => `${key} (${value})`).join(", ")}`;
+                    recipeList.appendChild(recipeLi);
+                });
             });
 
             for (const [ingredient, quantity] of Object.entries(ingredientsCount)) {
@@ -190,14 +224,14 @@
                 shoppingList.appendChild(li);
             }
 
-            document.getElementById("meal-proposals").style.display = "none";
-            document.getElementById("shopping-list").style.display = "block";
+            document.getElementById("saved-section").classList.add("hidden");
+            document.getElementById("shopping-section").classList.remove("hidden");
         }
 
-        // Retour au choix de plats
+        // Retour
         function goBack() {
-            document.getElementById("meal-proposals").style.display = "block";
-            document.getElementById("shopping-list").style.display = "none";
+            document.getElementById("shopping-section").classList.add("hidden");
+            document.getElementById("saved-section").classList.remove("hidden");
         }
 
         // Initialisation
