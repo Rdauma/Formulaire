@@ -13,7 +13,7 @@
             font-family: Arial, sans-serif;
             background-color: #f4f4f9;
             margin: 0;
-            padding: 20px;
+            padding: 10px;
         }
 
         .container {
@@ -28,6 +28,7 @@
         h1, h2 {
             text-align: center;
             color: #4CAF50;
+            margin-bottom: 20px;
         }
 
         ul {
@@ -46,7 +47,7 @@
         }
 
         button {
-            padding: 10px 15px;
+            padding: 8px 12px;
             background: #4CAF50;
             color: white;
             border: none;
@@ -58,13 +59,8 @@
             background: #45a049;
         }
 
-        #date-selection {
-            margin: 10px 0;
-            text-align: center;
-        }
-
-        #date-selection input {
-            padding: 5px;
+        input[type="date"] {
+            padding: 8px;
             font-size: 14px;
             border-radius: 5px;
             border: 1px solid #ccc;
@@ -73,18 +69,38 @@
         .hidden {
             display: none;
         }
+
+        .responsive {
+            font-size: 14px;
+        }
+
+        @media (max-width: 600px) {
+            button {
+                font-size: 12px;
+            }
+
+            li {
+                font-size: 14px;
+            }
+
+            input[type="date"] {
+                font-size: 12px;
+            }
+        }
     </style>
 </head>
 <body>
     <div class="container">
         <h1>Planificateur de Plats</h1>
 
+        <!-- Section des plats générés -->
         <div id="meal-section">
             <h2>Propositions de plats</h2>
             <ul id="meals-list"></ul>
             <button onclick="validateMeals()">Valider ces plats</button>
         </div>
 
+        <!-- Sélection de la période -->
         <div id="date-selection" class="hidden">
             <h2>Choisir une période</h2>
             <label for="start-date">Début :</label>
@@ -94,12 +110,14 @@
             <button onclick="saveMeals()">Sauvegarder</button>
         </div>
 
+        <!-- Plats sauvegardés -->
         <div id="saved-section" class="hidden">
             <h2>Plats sauvegardés</h2>
             <ul id="saved-meals-list"></ul>
             <button onclick="generateShoppingList()">Générer liste de courses</button>
         </div>
 
+        <!-- Liste de courses et recettes -->
         <div id="shopping-section" class="hidden">
             <h2>Liste de courses</h2>
             <ul id="shopping-list"></ul>
@@ -121,7 +139,7 @@
         let currentMeals = [];
         let savedMeals = [];
 
-        // Génère les plats
+        // Génération des plats
         function generateMeals() {
             const mealsList = document.getElementById("meals-list");
             mealsList.innerHTML = "";
@@ -148,20 +166,20 @@
             });
         }
 
-        // Change un plat
+        // Change un plat individuellement
         function changeMeal(index) {
             const newMeal = recipes[Math.floor(Math.random() * recipes.length)];
             currentMeals[index] = newMeal;
             generateMeals();
         }
 
-        // Valide les plats et affiche la sélection de dates
+        // Valider les plats et afficher la section de sauvegarde
         function validateMeals() {
             document.getElementById("meal-section").classList.add("hidden");
             document.getElementById("date-selection").classList.remove("hidden");
         }
 
-        // Sauvegarde les plats avec la période
+        // Sauvegarder les plats avec une période
         function saveMeals() {
             const startDate = document.getElementById("start-date").value;
             const endDate = document.getElementById("end-date").value;
@@ -185,14 +203,14 @@
             const savedList = document.getElementById("saved-meals-list");
             savedList.innerHTML = "";
 
-            savedMeals.forEach((entry, index) => {
+            savedMeals.forEach(entry => {
                 const li = document.createElement("li");
                 li.textContent = `Période : ${entry.period} - Plats : ${entry.meals.map(m => m.name).join(", ")}`;
                 savedList.appendChild(li);
             });
         }
 
-        // Génère la liste de courses
+        // Générer la liste de courses
         function generateShoppingList() {
             const shoppingList = document.getElementById("shopping-list");
             const recipeList = document.getElementById("recipe-list");
@@ -228,7 +246,7 @@
             document.getElementById("shopping-section").classList.remove("hidden");
         }
 
-        // Retour
+        // Retourner à la section précédente
         function goBack() {
             document.getElementById("shopping-section").classList.add("hidden");
             document.getElementById("saved-section").classList.remove("hidden");
