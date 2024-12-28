@@ -70,49 +70,29 @@
             background-color: #3e8e41;
         }
 
-        .menu-button {
+        .menu {
             position: fixed;
-            top: 20px;
-            right: 20px;
+            bottom: 0;
+            left: 0;
+            width: 100%;
             background-color: #4CAF50;
             color: white;
+            display: flex;
+            justify-content: space-evenly;
+            padding: 10px 0;
+            box-shadow: 0 -2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .menu button {
+            background: none;
             border: none;
-            cursor: pointer;
-            border-radius: 50%;
-            width: 50px;
-            height: 50px;
+            color: white;
             font-size: 16px;
-            text-align: center;
-            line-height: 50px;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-        }
-
-        .menu-options {
-            display: none;
-            position: fixed;
-            top: 80px;
-            right: 20px;
-            background-color: white;
-            border: 1px solid #ddd;
-            border-radius: 8px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            width: 200px;
-            z-index: 1000;
-        }
-
-        .menu-options button {
-            width: 100%;
-            padding: 10px;
-            border: none;
-            background-color: white;
-            color: #333;
-            text-align: left;
-            border-bottom: 1px solid #ddd;
             cursor: pointer;
         }
 
-        .menu-options button:hover {
-            background-color: #f9f9f9;
+        .menu button:hover {
+            text-decoration: underline;
         }
 
         .hidden {
@@ -121,12 +101,6 @@
     </style>
 </head>
 <body>
-    <button class="menu-button" onclick="toggleMenu()">☰</button>
-    <div class="menu-options hidden" id="menu-options">
-        <button onclick="showSavedMeals()">Plats sauvegardés</button>
-        <button onclick="generateMeals()">Retour aux plats</button>
-    </div>
-
     <h1>Planificateur de Plats Équilibrés</h1>
 
     <!-- Propositions de plats -->
@@ -148,6 +122,13 @@
         <ul id="shopping-items"></ul>
     </div>
 
+    <!-- Menu de navigation -->
+    <div class="menu">
+        <button onclick="showSection('meal-proposals')">Plats proposés</button>
+        <button onclick="showSection('saved-meals')">Plats sauvegardés</button>
+        <button onclick="showSection('shopping-list')">Liste des courses</button>
+    </div>
+
     <script>
         const recipes = [
             { name: "Poulet aux légumes", ingredients: { "Poulet": "500g", "Carottes": "4", "Courgettes": "2", "Ail": "2 gousses" }, recipe: "Faire revenir le poulet avec les légumes." },
@@ -160,14 +141,14 @@
         let currentMeals = [];
         let savedMeals = {};
 
-        function toggleMenu() {
-            const menuOptions = document.getElementById("menu-options");
-            menuOptions.classList.toggle("hidden");
+        function showSection(sectionId) {
+            document.querySelectorAll('.container').forEach(container => {
+                container.classList.add('hidden');
+            });
+            document.getElementById(sectionId).classList.remove('hidden');
         }
 
         function generateMeals() {
-            document.getElementById("saved-meals").classList.add("hidden");
-            document.getElementById("meal-proposals").classList.remove("hidden");
             const mealsList = document.getElementById("meals-list");
             mealsList.innerHTML = "";
 
@@ -210,7 +191,6 @@
         }
 
         function showSavedMeals() {
-            const savedMealsContainer = document.getElementById("saved-meals");
             const savedMealsList = document.getElementById("saved-meals-list");
             savedMealsList.innerHTML = "";
 
@@ -219,11 +199,24 @@
                 li.textContent = `${period} - ${savedMeals[period].map(meal => meal.name).join(", ")}`;
                 savedMealsList.appendChild(li);
             }
-
-            document.getElementById("meal-proposals").classList.add("hidden");
-            savedMealsContainer.classList.remove("hidden");
         }
 
+        function generateShoppingList() {
+            const shoppingList = document.getElementById("shopping-items");
+            shoppingList.innerHTML = "";
+
+            for (const period in savedMeals) {
+                savedMeals[period].forEach(meal => {
+                    for (const [ingredient, quantity] of Object.entries(meal.ingredients)) {
+                        const li = document.createElement("li");
+                        li.textContent = `${ingredient}: ${quantity}`;
+                        shoppingList.appendChild(li);
+                    }
+                });
+            }
+        }
+
+        // Initialisation
         generateMeals();
     </script>
 </body>
