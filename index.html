@@ -5,21 +5,17 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Plats Équilibrés</title>
     <style>
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-        }
-
         body {
             font-family: 'Arial', sans-serif;
             background-color: #f4f4f9;
             color: #333;
+            margin: 0;
+            padding: 0;
             display: flex;
             justify-content: center;
-            align-items: center;
-            height: 100vh;
+            align-items: flex-start;
             flex-direction: column;
+            min-height: 100vh;
             padding: 20px;
         }
 
@@ -41,109 +37,142 @@
         }
 
         button {
-            display: inline-block;
             padding: 10px 15px;
             background-color: #4CAF50;
             color: white;
             border: none;
             cursor: pointer;
-            border-radius: 25px;
+            border-radius: 8px;
             font-size: 14px;
             transition: all 0.3s ease;
         }
 
         button:hover {
             background-color: #3e8e41;
-            transform: scale(1.05);
         }
 
         ul {
             list-style-type: none;
             padding: 0;
+            margin: 0;
         }
 
         li {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            background-color: #fff;
+            background-color: #f9f9f9;
             margin: 8px 0;
             padding: 12px;
             border-radius: 8px;
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
             font-size: 16px;
-            color: #555;
         }
 
         li span {
             flex-grow: 1;
-            margin-right: 10px;
         }
 
-        /* Responsive */
-        @media (max-width: 600px) {
-            h1 {
-                font-size: 20px;
-            }
+        .menu {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            cursor: pointer;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            font-size: 16px;
+            text-align: center;
+            line-height: 50px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
 
-            button {
-                font-size: 12px;
-                padding: 8px 12px;
-            }
+        .menu-options {
+            display: none;
+            position: fixed;
+            top: 80px;
+            right: 20px;
+            background-color: white;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            width: 200px;
+        }
 
-            li {
-                font-size: 14px;
-                padding: 10px;
-            }
+        .menu-options button {
+            width: 100%;
+            padding: 10px;
+            border: none;
+            background-color: white;
+            color: #333;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+            cursor: pointer;
+        }
+
+        .menu-options button:hover {
+            background-color: #f9f9f9;
+        }
+
+        .hidden {
+            display: none;
         }
     </style>
 </head>
 <body>
+    <button class="menu" onclick="toggleMenu()">☰</button>
+    <div class="menu-options hidden" id="menu-options">
+        <button onclick="showSavedMeals()">Plats sauvegardés</button>
+        <button onclick="generateMeals()">Retour aux plats</button>
+    </div>
+
     <h1>Planificateur de Plats Équilibrés</h1>
+
     <div class="container" id="meal-proposals">
         <h2>Propositions de plats</h2>
         <ul id="meals-list"></ul>
         <button onclick="validateMeals()">Valider ces plats</button>
     </div>
 
+    <div class="container hidden" id="saved-meals">
+        <h2>Plats sauvegardés</h2>
+        <ul id="saved-meals-list"></ul>
+    </div>
+
     <script>
         const recipes = [
-            { name: "Poulet aux légumes" },
-            { name: "Saumon au riz et brocolis" },
-            { name: "Salade de quinoa" },
-            { name: "Pâtes complètes aux légumes" },
-            { name: "Tajine de pois chiches" },
-            { name: "Omelette aux épinards" },
-            { name: "Cabillaud au curry" },
-            { name: "Chili sin carne" },
-            { name: "Gratin de légumes" },
-            { name: "Boulettes de viande" },
+            { name: "Poulet aux légumes", ingredients: { "Poulet": "500g", "Carottes": "4", "Courgettes": "2", "Ail": "2 gousses" }, recipe: "Faire revenir le poulet avec les légumes." },
+            { name: "Saumon au riz et brocolis", ingredients: { "Saumon": "4 filets", "Riz": "300g", "Brocolis": "1 tête" }, recipe: "Cuire le saumon au four, accompagner de riz et brocolis vapeur." },
+            { name: "Salade de quinoa", ingredients: { "Quinoa": "200g", "Tomates": "3", "Avocat": "1", "Féta": "100g" }, recipe: "Cuire le quinoa, mélanger avec les légumes." },
+            { name: "Pâtes aux légumes", ingredients: { "Pâtes": "300g", "Poivrons": "2", "Champignons": "200g" }, recipe: "Cuire les pâtes et ajouter les légumes sautés." },
+            { name: "Tajine de pois chiches", ingredients: { "Pois chiches": "400g", "Carottes": "3", "Raisins secs": "50g" }, recipe: "Faire mijoter les pois chiches avec légumes et épices." },
         ];
 
         let currentMeals = [];
+        let savedMeals = {};
 
-        // Fonction pour générer les plats
+        // Générer les plats
         function generateMeals() {
+            document.getElementById("saved-meals").classList.add("hidden");
+            document.getElementById("meal-proposals").classList.remove("hidden");
+
             const mealsList = document.getElementById("meals-list");
             mealsList.innerHTML = "";
 
-            currentMeals = [];
             for (let i = 0; i < 7; i++) {
                 const randomRecipe = recipes[Math.floor(Math.random() * recipes.length)];
-                currentMeals.push(randomRecipe);
+                currentMeals[i] = randomRecipe;
+                addMealToList(randomRecipe, i);
             }
-
-            currentMeals.forEach((meal, index) => {
-                addMealToList(meal, index);
-            });
         }
 
-        // Fonction pour ajouter un plat à la liste
         function addMealToList(meal, index) {
             const mealsList = document.getElementById("meals-list");
 
             const li = document.createElement("li");
-
             const mealName = document.createElement("span");
             mealName.textContent = meal.name;
 
@@ -156,19 +185,39 @@
             mealsList.appendChild(li);
         }
 
-        // Fonction pour changer un plat spécifique
         function changeMeal(index) {
             const newMeal = recipes[Math.floor(Math.random() * recipes.length)];
             currentMeals[index] = newMeal;
-
-            // Mettre à jour uniquement le plat sélectionné
             const mealsList = document.getElementById("meals-list");
             mealsList.children[index].querySelector("span").textContent = newMeal.name;
         }
 
-        // Fonction pour valider les plats
         function validateMeals() {
-            alert("Plats validés : " + currentMeals.map(meal => meal.name).join(", "));
+            const period = prompt("Pour quelle période voulez-vous sauvegarder ces plats ?");
+            if (period) {
+                savedMeals[period] = [...currentMeals];
+                alert("Plats sauvegardés pour la période : " + period);
+            }
+        }
+
+        function showSavedMeals() {
+            const savedMealsContainer = document.getElementById("saved-meals");
+            const savedMealsList = document.getElementById("saved-meals-list");
+            savedMealsList.innerHTML = "";
+
+            for (const period in savedMeals) {
+                const li = document.createElement("li");
+                li.textContent = `${period} - ${savedMeals[period].map(meal => meal.name).join(", ")}`;
+                savedMealsList.appendChild(li);
+            }
+
+            document.getElementById("meal-proposals").classList.add("hidden");
+            savedMealsContainer.classList.remove("hidden");
+        }
+
+        function toggleMenu() {
+            const menuOptions = document.getElementById("menu-options");
+            menuOptions.classList.toggle("hidden");
         }
 
         // Initialisation
