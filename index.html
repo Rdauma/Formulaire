@@ -5,16 +5,22 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Plats Équilibrés</title>
     <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
         body {
             font-family: 'Arial', sans-serif;
             background-color: #f4f4f9;
             color: #333;
-            margin: 0;
-            padding: 20px;
             display: flex;
-            flex-direction: column;
+            justify-content: center;
             align-items: center;
-            min-height: 100vh;
+            height: 100vh;
+            flex-direction: column;
+            padding: 20px;
         }
 
         h1 {
@@ -34,6 +40,23 @@
             margin-bottom: 20px;
         }
 
+        button {
+            display: inline-block;
+            padding: 10px 15px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            cursor: pointer;
+            border-radius: 25px;
+            font-size: 14px;
+            transition: all 0.3s ease;
+        }
+
+        button:hover {
+            background-color: #3e8e41;
+            transform: scale(1.05);
+        }
+
         ul {
             list-style-type: none;
             padding: 0;
@@ -43,177 +66,101 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            background-color: #f9f9f9;
+            background-color: #fff;
             margin: 8px 0;
             padding: 12px;
             border-radius: 8px;
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
             font-size: 16px;
+            color: #555;
         }
 
         li span {
             flex-grow: 1;
+            margin-right: 10px;
         }
 
-        button {
-            padding: 10px 15px;
-            background-color: #4CAF50;
-            color: white;
-            border: none;
-            cursor: pointer;
-            border-radius: 8px;
-            font-size: 14px;
-            transition: all 0.3s ease;
-        }
+        /* Responsive */
+        @media (max-width: 600px) {
+            h1 {
+                font-size: 20px;
+            }
 
-        button:hover {
-            background-color: #3e8e41;
-        }
+            button {
+                font-size: 12px;
+                padding: 8px 12px;
+            }
 
-        .menu {
-            position: fixed;
-            bottom: 0;
-            left: 0;
-            width: 100%;
-            background-color: #4CAF50;
-            color: white;
-            display: flex;
-            justify-content: space-evenly;
-            padding: 10px 0;
-            box-shadow: 0 -2px 4px rgba(0, 0, 0, 0.1);
-        }
-
-        .menu button {
-            background: none;
-            border: none;
-            color: white;
-            font-size: 16px;
-            cursor: pointer;
-        }
-
-        .menu button:hover {
-            text-decoration: underline;
-        }
-
-        .hidden {
-            display: none;
+            li {
+                font-size: 14px;
+                padding: 10px;
+            }
         }
     </style>
 </head>
 <body>
     <h1>Planificateur de Plats Équilibrés</h1>
-
-    <!-- Propositions de plats -->
     <div class="container" id="meal-proposals">
         <h2>Propositions de plats</h2>
         <ul id="meals-list"></ul>
         <button onclick="validateMeals()">Valider ces plats</button>
     </div>
 
-    <!-- Plats sauvegardés -->
-    <div class="container hidden" id="saved-meals">
-        <h2>Plats sauvegardés</h2>
-        <ul id="saved-meals-list"></ul>
-    </div>
-
-    <!-- Liste des courses -->
-    <div class="container hidden" id="shopping-list">
-        <h2>Liste des courses</h2>
-        <ul id="shopping-items"></ul>
-    </div>
-
-    <!-- Menu de navigation -->
-    <div class="menu">
-        <button onclick="showSection('meal-proposals')">Plats proposés</button>
-        <button onclick="showSection('saved-meals')">Plats sauvegardés</button>
-        <button onclick="showSection('shopping-list')">Liste des courses</button>
-    </div>
-
     <script>
         const recipes = [
-            { name: "Poulet aux légumes", ingredients: { "Poulet": "500g", "Carottes": "4", "Courgettes": "2", "Ail": "2 gousses" }, recipe: "Faire revenir le poulet avec les légumes." },
-            { name: "Saumon au riz et brocolis", ingredients: { "Saumon": "4 filets", "Riz": "300g", "Brocolis": "1 tête" }, recipe: "Cuire le saumon au four, accompagner de riz et brocolis vapeur." },
-            { name: "Salade de quinoa", ingredients: { "Quinoa": "200g", "Tomates": "3", "Avocat": "1", "Féta": "100g" }, recipe: "Cuire le quinoa, mélanger avec les légumes." },
-            { name: "Pâtes aux légumes", ingredients: { "Pâtes": "300g", "Poivrons": "2", "Champignons": "200g" }, recipe: "Cuire les pâtes et ajouter les légumes sautés." },
-            { name: "Tajine de pois chiches", ingredients: { "Pois chiches": "400g", "Carottes": "3", "Raisins secs": "50g" }, recipe: "Faire mijoter les pois chiches avec légumes et épices." },
+            { name: "Poulet aux légumes" },
+            { name: "Saumon au riz et brocolis" },
+            { name: "Salade de quinoa" },
+            { name: "Pâtes complètes aux légumes" },
+            { name: "Tajine de pois chiches" },
+            { name: "Omelette aux épinards" },
+            { name: "Cabillaud au curry" },
+            { name: "Chili sin carne" },
+            { name: "Gratin de légumes" },
+            { name: "Boulettes de viande" },
         ];
 
         let currentMeals = [];
-        let savedMeals = {};
 
-        function showSection(sectionId) {
-            document.querySelectorAll('.container').forEach(container => {
-                container.classList.add('hidden');
-            });
-            document.getElementById(sectionId).classList.remove('hidden');
-        }
-
+        // Fonction pour générer les plats
         function generateMeals() {
             const mealsList = document.getElementById("meals-list");
             mealsList.innerHTML = "";
 
+            currentMeals = [];
             for (let i = 0; i < 7; i++) {
                 const randomRecipe = recipes[Math.floor(Math.random() * recipes.length)];
-                currentMeals[i] = randomRecipe;
-                addMealToList(randomRecipe, i);
+                currentMeals.push(randomRecipe);
             }
+
+            currentMeals.forEach((meal, index) => {
+                const li = document.createElement("li");
+
+                const mealName = document.createElement("span");
+                mealName.textContent = meal.name;
+
+                const changeButton = document.createElement("button");
+                changeButton.textContent = "Changer";
+                changeButton.onclick = () => changeMeal(index);
+
+                li.appendChild(mealName);
+                li.appendChild(changeButton);
+                mealsList.appendChild(li);
+            });
         }
 
-        function addMealToList(meal, index) {
-            const mealsList = document.getElementById("meals-list");
-
-            const li = document.createElement("li");
-            const mealName = document.createElement("span");
-            mealName.textContent = meal.name;
-
-            const changeButton = document.createElement("button");
-            changeButton.textContent = "Changer";
-            changeButton.onclick = () => changeMeal(index);
-
-            li.appendChild(mealName);
-            li.appendChild(changeButton);
-            mealsList.appendChild(li);
-        }
-
+        // Fonction pour changer un plat
         function changeMeal(index) {
             const newMeal = recipes[Math.floor(Math.random() * recipes.length)];
             currentMeals[index] = newMeal;
-            const mealsList = document.getElementById("meals-list");
-            mealsList.children[index].querySelector("span").textContent = newMeal.name;
+
+            // Rafraîchir la liste des plats
+            generateMeals();
         }
 
+        // Fonction pour valider les plats
         function validateMeals() {
-            const period = prompt("Pour quelle période voulez-vous sauvegarder ces plats ?");
-            if (period) {
-                savedMeals[period] = [...currentMeals];
-                alert("Plats sauvegardés pour la période : " + period);
-            }
-        }
-
-        function showSavedMeals() {
-            const savedMealsList = document.getElementById("saved-meals-list");
-            savedMealsList.innerHTML = "";
-
-            for (const period in savedMeals) {
-                const li = document.createElement("li");
-                li.textContent = `${period} - ${savedMeals[period].map(meal => meal.name).join(", ")}`;
-                savedMealsList.appendChild(li);
-            }
-        }
-
-        function generateShoppingList() {
-            const shoppingList = document.getElementById("shopping-items");
-            shoppingList.innerHTML = "";
-
-            for (const period in savedMeals) {
-                savedMeals[period].forEach(meal => {
-                    for (const [ingredient, quantity] of Object.entries(meal.ingredients)) {
-                        const li = document.createElement("li");
-                        li.textContent = `${ingredient}: ${quantity}`;
-                        shoppingList.appendChild(li);
-                    }
-                });
-            }
+            alert("Plats validés : " + currentMeals.map(meal => meal.name).join(", "));
         }
 
         // Initialisation
