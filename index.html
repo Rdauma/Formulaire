@@ -80,49 +80,52 @@
             margin-right: 10px;
         }
 
-        /* Responsive */
-        @media (max-width: 600px) {
-            h1 {
-                font-size: 20px;
-            }
+        #date-selection {
+            margin: 10px 0;
+            text-align: center;
+        }
 
-            button {
-                font-size: 12px;
-                padding: 8px 12px;
-            }
-
-            li {
-                font-size: 14px;
-                padding: 10px;
-            }
+        #date-selection input {
+            padding: 5px;
+            font-size: 14px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
         }
     </style>
 </head>
 <body>
     <h1>Planificateur de Plats Équilibrés</h1>
+
     <div class="container" id="meal-proposals">
         <h2>Propositions de plats</h2>
         <ul id="meals-list"></ul>
+        <div id="date-selection">
+            <label for="start-date">Début :</label>
+            <input type="date" id="start-date">
+            <label for="end-date">Fin :</label>
+            <input type="date" id="end-date">
+        </div>
         <button onclick="validateMeals()">Valider ces plats</button>
+    </div>
+
+    <div class="container" id="shopping-list" style="display: none;">
+        <h2>Liste des courses</h2>
+        <ul id="shopping-items"></ul>
+        <button onclick="goBack()">Retour</button>
     </div>
 
     <script>
         const recipes = [
-            { name: "Poulet aux légumes" },
-            { name: "Saumon au riz et brocolis" },
-            { name: "Salade de quinoa" },
-            { name: "Pâtes complètes aux légumes" },
-            { name: "Tajine de pois chiches" },
-            { name: "Omelette aux épinards" },
-            { name: "Cabillaud au curry" },
-            { name: "Chili sin carne" },
-            { name: "Gratin de légumes" },
-            { name: "Boulettes de viande" },
+            { name: "Poulet aux légumes", ingredients: { "Poulet": "500g", "Carottes": "4", "Courgettes": "2", "Ail": "2 gousses" } },
+            { name: "Saumon au riz et brocolis", ingredients: { "Saumon": "4 filets", "Riz": "300g", "Brocolis": "1 tête" } },
+            { name: "Salade de quinoa", ingredients: { "Quinoa": "200g", "Tomates": "3", "Avocat": "1", "Féta": "100g" } },
+            { name: "Pâtes complètes aux légumes", ingredients: { "Pâtes": "300g", "Poivrons": "2", "Champignons": "200g" } },
+            { name: "Tajine de pois chiches", ingredients: { "Pois chiches": "400g", "Carottes": "3", "Raisins secs": "50g" } }
         ];
 
         let currentMeals = [];
 
-        // Fonction pour générer les plats
+        // Génère les plats
         function generateMeals() {
             const mealsList = document.getElementById("meals-list");
             mealsList.innerHTML = "";
@@ -149,18 +152,52 @@
             });
         }
 
-        // Fonction pour changer un plat
+        // Change un plat
         function changeMeal(index) {
             const newMeal = recipes[Math.floor(Math.random() * recipes.length)];
             currentMeals[index] = newMeal;
-
-            // Rafraîchir la liste des plats
             generateMeals();
         }
 
-        // Fonction pour valider les plats
+        // Valide les plats et génère la liste de courses
         function validateMeals() {
-            alert("Plats validés : " + currentMeals.map(meal => meal.name).join(", "));
+            const startDate = document.getElementById("start-date").value;
+            const endDate = document.getElementById("end-date").value;
+
+            if (!startDate || !endDate) {
+                alert("Veuillez sélectionner une période valide.");
+                return;
+            }
+
+            const shoppingList = document.getElementById("shopping-items");
+            shoppingList.innerHTML = "";
+
+            const ingredientsCount = {};
+
+            currentMeals.forEach(meal => {
+                for (const [ingredient, quantity] of Object.entries(meal.ingredients)) {
+                    if (ingredientsCount[ingredient]) {
+                        ingredientsCount[ingredient] += `, ${quantity}`;
+                    } else {
+                        ingredientsCount[ingredient] = quantity;
+                    }
+                }
+            });
+
+            for (const [ingredient, quantity] of Object.entries(ingredientsCount)) {
+                const li = document.createElement("li");
+                li.textContent = `${ingredient}: ${quantity}`;
+                shoppingList.appendChild(li);
+            }
+
+            document.getElementById("meal-proposals").style.display = "none";
+            document.getElementById("shopping-list").style.display = "block";
+        }
+
+        // Retour au choix de plats
+        function goBack() {
+            document.getElementById("meal-proposals").style.display = "block";
+            document.getElementById("shopping-list").style.display = "none";
         }
 
         // Initialisation
