@@ -10,13 +10,11 @@
             background-color: #f4f4f9;
             color: #333;
             margin: 0;
-            padding: 0;
-            display: flex;
-            justify-content: center;
-            align-items: flex-start;
-            flex-direction: column;
-            min-height: 100vh;
             padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
         }
 
         h1 {
@@ -36,25 +34,9 @@
             margin-bottom: 20px;
         }
 
-        button {
-            padding: 10px 15px;
-            background-color: #4CAF50;
-            color: white;
-            border: none;
-            cursor: pointer;
-            border-radius: 8px;
-            font-size: 14px;
-            transition: all 0.3s ease;
-        }
-
-        button:hover {
-            background-color: #3e8e41;
-        }
-
         ul {
             list-style-type: none;
             padding: 0;
-            margin: 0;
         }
 
         li {
@@ -73,7 +55,22 @@
             flex-grow: 1;
         }
 
-        .menu {
+        button {
+            padding: 10px 15px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            cursor: pointer;
+            border-radius: 8px;
+            font-size: 14px;
+            transition: all 0.3s ease;
+        }
+
+        button:hover {
+            background-color: #3e8e41;
+        }
+
+        .menu-button {
             position: fixed;
             top: 20px;
             right: 20px;
@@ -100,6 +97,7 @@
             border-radius: 8px;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
             width: 200px;
+            z-index: 1000;
         }
 
         .menu-options button {
@@ -123,7 +121,7 @@
     </style>
 </head>
 <body>
-    <button class="menu" onclick="toggleMenu()">☰</button>
+    <button class="menu-button" onclick="toggleMenu()">☰</button>
     <div class="menu-options hidden" id="menu-options">
         <button onclick="showSavedMeals()">Plats sauvegardés</button>
         <button onclick="generateMeals()">Retour aux plats</button>
@@ -131,17 +129,20 @@
 
     <h1>Planificateur de Plats Équilibrés</h1>
 
+    <!-- Propositions de plats -->
     <div class="container" id="meal-proposals">
         <h2>Propositions de plats</h2>
         <ul id="meals-list"></ul>
         <button onclick="validateMeals()">Valider ces plats</button>
     </div>
 
+    <!-- Plats sauvegardés -->
     <div class="container hidden" id="saved-meals">
         <h2>Plats sauvegardés</h2>
         <ul id="saved-meals-list"></ul>
     </div>
 
+    <!-- Liste des courses -->
     <div class="container hidden" id="shopping-list">
         <h2>Liste des courses</h2>
         <ul id="shopping-items"></ul>
@@ -159,11 +160,14 @@
         let currentMeals = [];
         let savedMeals = {};
 
-        // Générer les plats
+        function toggleMenu() {
+            const menuOptions = document.getElementById("menu-options");
+            menuOptions.classList.toggle("hidden");
+        }
+
         function generateMeals() {
             document.getElementById("saved-meals").classList.add("hidden");
             document.getElementById("meal-proposals").classList.remove("hidden");
-
             const mealsList = document.getElementById("meals-list");
             mealsList.innerHTML = "";
 
@@ -220,12 +224,6 @@
             savedMealsContainer.classList.remove("hidden");
         }
 
-        function toggleMenu() {
-            const menuOptions = document.getElementById("menu-options");
-            menuOptions.classList.toggle("hidden");
-        }
-
-        // Initialisation
         generateMeals();
     </script>
 </body>
